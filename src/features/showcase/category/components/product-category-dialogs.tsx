@@ -45,8 +45,6 @@ export function ProductCategoryDialogs() {
             key={`category-detail-${selectedCategoryRow._id}`}
             open={productCategoryDialog === 'view'}
             onOpenChange={(data) => {
-              console.log("data",data)
-              // setOpen('edit')
               openShowcaseDialog("view")
               setTimeout(() => {
                 setSelectedProductCategoryRow(null)

@@ -60,7 +60,7 @@ export function updateProduct(param:{data:UpdateProductDTO,productId:string}){
 export function createProduct(param:{data:CreateProductDTO}){
   const data = param.data;
   const {name,slug,description,companyId,productCategoryId,tags,price,originalPrice,stock,images} = data;
-  let fd = new FormData();
+  const fd = new FormData();
   fd.append("name",name);
   fd.append("slug",slug);
   fd.append("companyId",companyId);

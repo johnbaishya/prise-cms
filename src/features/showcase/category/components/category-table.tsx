@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import {
   type SortingState,
   type VisibilityState,
@@ -7,12 +8,18 @@ import {
   getFacetedRowModel,
   getFacetedUniqueValues,
   getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table'
+import { QueryKey } from '@/Types/appEnums'
+import type {
+  ListProductCategoryQueryDTO,
+  ProductCategorySortField,
+} from '@/Types/request/showcase-request'
+import { ThreeDots } from 'react-loader-spinner'
+import { getProductCategoryList } from '@/api/showcase/product-category.service'
+import { getSelectedCompanyId } from '@/stores/actions/app-actions'
 import { cn } from '@/lib/utils'
-import { type NavigateFn, useTableUrlState } from '@/hooks/use-table-url-state'
+import { type NavigateFn } from '@/hooks/use-table-url-state'
 import {
   Table,
   TableBody,
@@ -22,16 +29,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { DataTablePagination, DataTableToolbar } from '@/components/data-table'
-import { DataTableBulkActions } from './data-table-bulk-actions'
 import { categoryColumns as columns } from './category-columns'
-import { useQuery } from '@tanstack/react-query'
-import { QueryKey } from '@/Types/appEnums'
-import { getProductCategoryList } from '@/api/showcase/product-category.service'
-import { ListProductCategoryQueryDTO, ProductCategorySortField } from '@/Types/request/showcase-request'
-import { Skeleton } from '@/components/ui/skeleton'
-import { ThreeDots } from 'react-loader-spinner'
-import { getSelectedCompanyId } from '@/stores/actions/app-actions'
-import { AlertDialog, AlertDialogContent, AlertDialogOverlay, AlertDialogPortal } from '@/components/ui/alert-dialog'
 
 type DataTableProps = {
   // data: Category[]
@@ -39,40 +37,34 @@ type DataTableProps = {
   navigate: NavigateFn
 }
 
-export function CategoryTable({navigate }: DataTableProps) {
+export function CategoryTable({ navigate }: DataTableProps) {
   // Local UI-only states
   const [rowSelection, setRowSelection] = useState({})
-  const [pagination,setPagination] = useState({
+  const [pagination, setPagination] = useState({
     pageIndex: 0,
     pageSize: 10,
   })
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const [sorting, setSorting] = useState<SortingState>([])
-  const [searchInput,setSearchInput] = useState("");
-  const [query,setQuery] = useState<ListProductCategoryQueryDTO>({
-    search:"",
-    page:1,
-    limit:10,
-  });
-
-  
-
-  
-  
-  const { data:tableData, isLoading}= useQuery({
-    queryKey:[QueryKey.LIST_PRODUCT_CATEGORY,query],
-    queryFn:()=>getProductCategoryList(query,getSelectedCompanyId())
+  const [searchInput, setSearchInput] = useState('')
+  const [query, setQuery] = useState<ListProductCategoryQueryDTO>({
+    search: '',
+    page: 1,
+    limit: 10,
   })
 
+  const { data: tableData, isLoading } = useQuery({
+    queryKey: [QueryKey.LIST_PRODUCT_CATEGORY, query],
+    queryFn: () => getProductCategoryList(query, getSelectedCompanyId()),
+  })
 
-
-  const updateQuery = (newData:Partial<ListProductCategoryQueryDTO>)=>{
-    setQuery((prev=>{
-      return{
+  const updateQuery = (newData: Partial<ListProductCategoryQueryDTO>) => {
+    setQuery((prev) => {
+      return {
         ...prev,
-        ...newData
+        ...newData,
       }
-    }))
+    })
   }
 
   // Local state management for table (uncomment to use local-only state, not synced with URL)
@@ -100,18 +92,9 @@ export function CategoryTable({navigate }: DataTableProps) {
   //   ],
   // })
 
-
-  
-
-
-    
-
-   
-
-
   // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
-    data: tableData?.data||[],
+    data: tableData?.data || [],
     columns,
     state: {
       sorting,
@@ -121,7 +104,7 @@ export function CategoryTable({navigate }: DataTableProps) {
       columnVisibility,
     },
     enableRowSelection: true,
-    onPaginationChange:setPagination,
+    onPaginationChange: setPagination,
     // onColumnFiltersChange,
     onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
@@ -133,25 +116,24 @@ export function CategoryTable({navigate }: DataTableProps) {
     getFacetedUniqueValues: getFacetedUniqueValues(),
     manualPagination: true,
     pageCount: tableData?.meta?.totalPages ?? 0,
-    manualSorting:true,
-
+    manualSorting: true,
   })
-
-
 
   // useEffect(() => {
   //   ensurePageInRange(table.getPageCount())
   // }, [table, ensurePageInRange])
 
   useEffect(() => {
-  updateQuery({
-    page: pagination.pageIndex + 1,
-    limit: pagination.pageSize,
-    search:searchInput,
-    sortBy:(sorting.length?sorting[0].id:undefined ) as ProductCategorySortField |undefined,
-    order:sorting.length?sorting[0].desc?"desc":"asc":undefined,
-  })
-}, [pagination,sorting,searchInput])
+    updateQuery({
+      page: pagination.pageIndex + 1,
+      limit: pagination.pageSize,
+      search: searchInput,
+      sortBy: (sorting.length ? sorting[0].id : undefined) as
+        | ProductCategorySortField
+        | undefined,
+      order: sorting.length ? (sorting[0].desc ? 'desc' : 'asc') : undefined,
+    })
+  }, [pagination, sorting, searchInput])
 
   return (
     <div
@@ -160,7 +142,6 @@ export function CategoryTable({navigate }: DataTableProps) {
         'flex flex-1 flex-col gap-4'
       )}
     >
-      
       <DataTableToolbar
         table={table}
         searchPlaceholder='Filter Category...'
@@ -182,9 +163,9 @@ export function CategoryTable({navigate }: DataTableProps) {
         //     options: roles.map((role) => ({ ...role })),
         //   },
         // ]}
-        onSearch={(data)=>{
+        onSearch={(data) => {
           // updateQuery({search:data})
-          setSearchInput(data);
+          setSearchInput(data)
         }}
       />
       <div className='overflow-hidden rounded-md border'>
@@ -216,28 +197,28 @@ export function CategoryTable({navigate }: DataTableProps) {
             ))}
           </TableHeader>
           <TableBody>
-            {
-              isLoading?
+            {isLoading ? (
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
-                  className='h-24 text-center items-center justify-center'
+                  className='h-24 items-center justify-center text-center'
                 >
                   <div className='flex items-center justify-center'>
-                  <ThreeDots
-                    visible={true}
-                    // height="80"
-                    width="80"
-                    color="#000"
-                    radius="4"
-                    ariaLabel="three-dots-loading"
-                    wrapperStyle={{}}
-                    wrapperClass=""
+                    <ThreeDots
+                      visible={true}
+                      // height="80"
+                      width='80'
+                      color='#000'
+                      radius='4'
+                      ariaLabel='three-dots-loading'
+                      wrapperStyle={{}}
+                      wrapperClass=''
                     />
                   </div>
                 </TableCell>
               </TableRow>
-              :<>
+            ) : (
+              <>
                 {table.getRowModel().rows?.length ? (
                   table.getRowModel().rows.map((row) => (
                     <TableRow
@@ -273,7 +254,7 @@ export function CategoryTable({navigate }: DataTableProps) {
                   </TableRow>
                 )}
               </>
-            }
+            )}
           </TableBody>
         </Table>
       </div>

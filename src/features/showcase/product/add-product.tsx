@@ -2,8 +2,12 @@ import { useEffect, useState } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { QueryKey } from '@/Types/appEnums'
 import { IProductCategory } from '@/Types/entities/showcase-entities'
 import Select from 'react-select'
+import AsyncSelect from 'react-select/async'
+import { getSelectedCompanyId, showAppLoader } from '@/stores/actions/app-actions'
 import { useShowcaseStore } from '@/stores/showcase-store'
 import { Button } from '@/components/ui/button'
 import {
@@ -17,6 +21,13 @@ import {
 import { ImageThumbnail } from '@/components/ui/image-thumbnail'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
+import { getAllProductCategoryList, getProductCategoryList } from '@/api/showcase/product-category.service'
+import { getAllProductTagList } from '@/api/showcase/product-tag.service'
+import { Value } from '@radix-ui/react-select'
+import { getReactSelectLoadOptions, mapDataToSelectOption } from '@/lib/react-select-option-handler'
+import { createProduct } from '@/api/showcase/product.service'
+import { toast } from 'sonner'
+import { CreateProductDTO } from '@/Types/request/showcase-request'
 
 // const formSchema = z
 //   .object({
@@ -36,12 +47,20 @@ const formSchema = z.object({
     .min(1, 'original price must be greater than 0')
     .optional(),
   price: z.number().min(1, 'price must be greater than 0'),
-  productCategoryId: z.string().min(1, 'category is required'),
-  tags: z.array(z.string()).optional(),
+  // productCategoryId: z.string().min(1, 'category is required'),
+  productCategoryId: z.custom<SelectOption>(),
+  // tags: z.array(z.string()).optional(),
+  tags: z.custom<SelectOption[]>(),
   stock: z.number().min(0, 'stock cannot be negative').optional(),
   images: z.array(z.instanceof(File)).optional(),
 })
+
 type UserForm = z.infer<typeof formSchema>
+
+type SelectOption = {
+  label:string,
+  value:string,
+}
 
 type ProductCategoryActionDialogProps = {
   currentRow?: IProductCategory
@@ -79,10 +98,68 @@ export default function AddProduct() {
   }
 
   const imagesInputWatcher = form.watch('images')
+  const categoryWatcher = form.watch("productCategoryId")
+  const tagWatrcher = form.watch("tags")
+
+  const { data: categoryList, isLoading:categoriesLoading } = useQuery({
+    queryKey: [QueryKey.LIST_PRODUCT_CATEGORY_ALL],
+    queryFn: () => getAllProductCategoryList( getSelectedCompanyId()),
+  })
+
+  
+  const { data: tagList, isLoading:tagsLoading } = useQuery({
+    queryKey: [QueryKey.LIST_PRODUCT_TAG_ALL],
+    queryFn: () => getAllProductTagList( getSelectedCompanyId()),
+  })
+  
+
+  const categoryLoadOptions = getReactSelectLoadOptions(categoryList?.data||[])
+  const defaultCategoryOptions = mapDataToSelectOption(categoryList?.data||[])
+  const tagLoadOptions = getReactSelectLoadOptions(tagList?.data||[]);
+  const defaultTagOptions = mapDataToSelectOption(tagList?.data||[]);
+
+
+  const onSubmit = (values:UserForm)=>{
+    const companyId = getSelectedCompanyId();
+    const productCategoryId = values.productCategoryId.value;
+    const tags = values?.tags?.map(item=>item.value);
+    const data:CreateProductDTO = {...values,companyId,productCategoryId,tags};
+    productAddMutation.mutate({data})
+    // console.log("submit",values)
+    // console.log(form);
+  }
+
+
+  const queryClient = useQueryClient();
+
+
+  const productAddMutation = useMutation({
+  mutationFn:createProduct,
+  onMutate:()=>{showAppLoader(true)},
+  onSettled:()=>{showAppLoader(false)},
+  onSuccess:()=>{
+    // closeShowcaseDialog();
+    form.reset();
+    toast.success("Product added Successfully !!!");
+    queryClient.invalidateQueries({
+      queryKey:[QueryKey.LIST_PRODUCT_CATEGORY]
+    });
+    // setSelectedProductCategoryRow(null)
+  }
+});
+
+
+
+
+  useEffect(()=>{
+    const cat = form.getValues("productCategoryId")
+    console.log("sc",cat)
+  },[categoryWatcher])
 
   useEffect(() => {
     handleImagePreview()
   }, [imagesInputWatcher])
+
 
   return (
     <div className='mx-auto w-full max-w-2xl px-4 py-6'>
@@ -99,7 +176,7 @@ export default function AddProduct() {
         <Form {...form}>
           <form
             id='category-form'
-            // onSubmit={form.handleSubmit(onSubmit)}
+            onSubmit={form.handleSubmit(onSubmit)}
             className='space-y-6'
           >
             {/* Name */}
@@ -182,10 +259,11 @@ export default function AddProduct() {
                   <div className='md:col-span-4'>
                     <FormControl>
                       <Input
+                        {...field}
                         type='number'
                         placeholder='Latest Price of the product'
                         autoComplete='off'
-                        {...field}
+                        onChange={(event) => field.onChange(Number(event.target.value))}
                       />
                     </FormControl>
                     <FormMessage />
@@ -208,6 +286,7 @@ export default function AddProduct() {
                         placeholder='Previous price of the product'
                         autoComplete='off'
                         {...field}
+                        onChange={(event) => field.onChange(Number(event.target.value))}
                       />
                     </FormControl>
                     <FormMessage />
@@ -225,14 +304,25 @@ export default function AddProduct() {
                   </FormLabel>
                   <div className='md:col-span-4'>
                     <FormControl>
-                      <Select
+                     <AsyncSelect cacheOptions loadOptions={categoryLoadOptions} defaultOptions={defaultCategoryOptions} {...field}/>
+                      {/* <Select
                         placeholder='Select a category for product'
+                        {...field}
+                        options={
+                          categoryList?.data.map(item=>({
+                            Value:item._id,
+                            label:item.name
+                          }))
+                        }
+
                         options={[
                           { value: 'chocolate', label: 'Chocolate' },
                           { value: 'strawberry', label: 'Strawberry' },
                           { value: 'vanilla', label: 'Vanilla' },
                         ]}
-                      />
+
+                        options={categoryList}
+                      /> */}
                       {/* <Input
                         placeholder="Product Category"
                         autoComplete="off"
@@ -254,15 +344,12 @@ export default function AddProduct() {
                   </FormLabel>
                   <div className='md:col-span-4'>
                     <FormControl>
-                      <Select
-                        placeholder='Select tags for the product'
-                        name='tags'
-                        isMulti
-                        options={[
-                          { value: 'chocolate', label: 'Chocolate' },
-                          { value: 'strawberry', label: 'Strawberry' },
-                          { value: 'vanilla', label: 'Vanilla' },
-                        ]}
+                      <AsyncSelect 
+                        isMulti 
+                        cacheOptions 
+                        loadOptions={tagLoadOptions} 
+                        defaultOptions={defaultTagOptions}
+                        {...field}
                       />
                       {/* <Input
                         placeholder="Product Category"
@@ -290,6 +377,7 @@ export default function AddProduct() {
                         placeholder='Number of available Stock of the Product'
                         autoComplete='off'
                         {...field}
+                        onChange={(event) => field.onChange(Number(event.target.value))}
                       />
                     </FormControl>
                     <FormMessage />
