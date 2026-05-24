@@ -7,8 +7,10 @@ import type {
 } from '@/Types/request/showcase-request'
 import { apiClient } from '../apiClient'
 import ENDPOINTS from '../endpoints'
-import { ListResponse } from '@/Types/response/list-response'
-import { IProductCategory } from '@/Types/entities/showcase-entities'
+import { type ListResponse } from '@/Types/response/list-response'
+import {type IProductCategory } from '@/Types/entities/showcase-entities'
+
+
 
 export function getProductCategoryList(
   query: ListProductCategoryQueryDTO,
@@ -27,11 +29,34 @@ export function getProductCategoryList(
     .then((res) => res.data)
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
 export function getAllProductCategoryList(companyId: string):Promise<ListResponse<IProductCategory>> {
   return apiClient
     .get(ENDPOINTS.showcase.listAllProductCategoryByCompanyId(companyId))
     .then((res) => res.data)
 }
+
+
+
+
+
+
+
+
+
+
+
 
 export function updateProductCategory(param: {
   data: updateProductCategoryDTO
@@ -59,6 +84,20 @@ export function updateProductCategory(param: {
   )
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 export function createProductCategory(param: {
   data: createProductCategoryDTO
 }) {
@@ -76,6 +115,18 @@ export function createProductCategory(param: {
   }
   return apiClient.post(ENDPOINTS.showcase.createProductCategory, fd)
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 export function deleteProductCategory(param: { id: string }) {
   return apiClient.delete(ENDPOINTS.showcase.deleteProductCategory(param.id))

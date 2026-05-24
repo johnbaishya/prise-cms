@@ -1,14 +1,10 @@
 import { useEffect, useState } from 'react'
-import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { QueryKey } from '@/Types/appEnums'
-import { IProductCategory } from '@/Types/entities/showcase-entities'
-import Select from 'react-select'
 import AsyncSelect from 'react-select/async'
 import { getSelectedCompanyId, showAppLoader } from '@/stores/actions/app-actions'
-import { useShowcaseStore } from '@/stores/showcase-store'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -21,66 +17,27 @@ import {
 import { ImageThumbnail } from '@/components/ui/image-thumbnail'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-import { getAllProductCategoryList, getProductCategoryList } from '@/api/showcase/product-category.service'
+import { getAllProductCategoryList } from '@/api/showcase/product-category.service'
 import { getAllProductTagList } from '@/api/showcase/product-tag.service'
-import { Value } from '@radix-ui/react-select'
 import { getReactSelectLoadOptions, mapDataToSelectOption } from '@/lib/react-select-option-handler'
 import { createProduct } from '@/api/showcase/product.service'
 import { toast } from 'sonner'
-import { CreateProductDTO } from '@/Types/request/showcase-request'
+import { type CreateProductDTO } from '@/Types/request/showcase-request'
+import { defaultAddProductForm } from './product.constants'
+import { type AddProductForm, addProductformSchema } from './product.types'
+import { getRouteApi } from '@tanstack/react-router'
 
-// const formSchema = z
-//   .object({
-//     name: z.string().min(1, 'Name is required.'),
-//     slug: z.string().min(1, 'slug is required'),
-//     image: z.union([z.string(),z.instanceof(File)]),
-//     description: z.string().optional(),
-//     isEdit: z.boolean(),
-//   });
 
-const formSchema = z.object({
-  name: z.string().min(1, 'name is required'),
-  slug: z.string().min(1, 'slug is required'),
-  description: z.string().optional(),
-  originalPrice: z
-    .number()
-    .min(1, 'original price must be greater than 0')
-    .optional(),
-  price: z.number().min(1, 'price must be greater than 0'),
-  // productCategoryId: z.string().min(1, 'category is required'),
-  productCategoryId: z.custom<SelectOption>(),
-  // tags: z.array(z.string()).optional(),
-  tags: z.custom<SelectOption[]>(),
-  stock: z.number().min(0, 'stock cannot be negative').optional(),
-  images: z.array(z.instanceof(File)).optional(),
-})
+const route = getRouteApi('/_authenticated/showcase/product/add')
 
-type UserForm = z.infer<typeof formSchema>
 
-type SelectOption = {
-  label:string,
-  value:string,
-}
-
-type ProductCategoryActionDialogProps = {
-  currentRow?: IProductCategory
-  open: boolean
-  onOpenChange: (open: boolean) => void
-}
 
 export default function AddProduct() {
-  const isEdit = true
-  const currentRow = useShowcaseStore((state) => state.selectedProductTagRow)
-  const form = useForm<UserForm>({
-    resolver: zodResolver(formSchema),
-    // defaultValues:
-    //   {
-    //       name: 'john',
-    //       slug: 'asdf',
-    //       description: 'adsf',
-    //     //   isEdit,
-    //       image:undefined
-    //     },
+
+  const navigate = route.useNavigate()
+  const form = useForm<AddProductForm>({
+    resolver: zodResolver(addProductformSchema),
+    defaultValues:defaultAddProductForm()
   })
 
   const [previewImages, setPreviewImages] = useState<string[]>([])
@@ -99,7 +56,6 @@ export default function AddProduct() {
 
   const imagesInputWatcher = form.watch('images')
   const categoryWatcher = form.watch("productCategoryId")
-  const tagWatrcher = form.watch("tags")
 
   const { data: categoryList, isLoading:categoriesLoading } = useQuery({
     queryKey: [QueryKey.LIST_PRODUCT_CATEGORY_ALL],
@@ -119,7 +75,8 @@ export default function AddProduct() {
   const defaultTagOptions = mapDataToSelectOption(tagList?.data||[]);
 
 
-  const onSubmit = (values:UserForm)=>{
+  const onSubmit = (values:AddProductForm)=>{
+    
     const companyId = getSelectedCompanyId();
     const productCategoryId = values.productCategoryId.value;
     const tags = values?.tags?.map(item=>item.value);
@@ -139,7 +96,10 @@ export default function AddProduct() {
   onSettled:()=>{showAppLoader(false)},
   onSuccess:()=>{
     // closeShowcaseDialog();
-    form.reset();
+    form.reset(defaultAddProductForm());
+    navigate({
+      to:"/showcase/product",
+    })
     toast.success("Product added Successfully !!!");
     queryClient.invalidateQueries({
       queryKey:[QueryKey.LIST_PRODUCT_CATEGORY]
@@ -153,7 +113,6 @@ export default function AddProduct() {
 
   useEffect(()=>{
     const cat = form.getValues("productCategoryId")
-    console.log("sc",cat)
   },[categoryWatcher])
 
   useEffect(() => {

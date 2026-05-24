@@ -72,11 +72,11 @@ export const sidebarData: SidebarData = {
           url:"/showcase/product",
           icon:Package,
         },
-         {
-          title:"Add Product",
-          url:"/showcase/product/add",
-          icon:Package,
-        },
+        //  {
+        //   title:"Add Product",
+        //   url:"/showcase/product/add",
+        //   icon:Package,
+        // },
         {
           title: 'Tasks',
           url: '/tasks',

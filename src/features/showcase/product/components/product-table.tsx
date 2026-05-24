@@ -27,11 +27,12 @@ import { productColumns as columns } from './product-columns'
 import { useQuery } from '@tanstack/react-query'
 import { QueryKey } from '@/Types/appEnums'
 import { getProductCategoryList } from '@/api/showcase/product-category.service'
-import { ListProductCategoryQueryDTO, ListProductsQueryDTO, ProductCategorySortField } from '@/Types/request/showcase-request'
+import { ListProductCategoryQueryDTO, ListProductsQueryDTO, ProductCategorySortField, ProductSortField } from '@/Types/request/showcase-request'
 import { Skeleton } from '@/components/ui/skeleton'
 import { ThreeDots } from 'react-loader-spinner'
 import { getSelectedCompanyId } from '@/stores/actions/app-actions'
 import { AlertDialog, AlertDialogContent, AlertDialogOverlay, AlertDialogPortal } from '@/components/ui/alert-dialog'
+import { getProductList } from '@/api/showcase/product.service'
 
 type DataTableProps = {
   // data: Category[]
@@ -53,6 +54,8 @@ export function ProductTable({navigate }: DataTableProps) {
     search:"",
     page:1,
     limit:10,
+    category:"",
+    tag:[],
   });
 
   
@@ -60,13 +63,13 @@ export function ProductTable({navigate }: DataTableProps) {
   
   
   const { data:tableData, isLoading}= useQuery({
-    queryKey:[QueryKey.LIST_PRODUCT_CATEGORY,query],
-    queryFn:()=>getProductCategoryList(query,getSelectedCompanyId())
+    queryKey:[QueryKey.LIST_PRODUCT,query],
+    queryFn:()=>getProductList(query,getSelectedCompanyId())
   })
 
 
 
-  const updateQuery = (newData:Partial<ListProductCategoryQueryDTO>)=>{
+  const updateQuery = (newData:Partial<ListProductsQueryDTO>)=>{
     setQuery((prev=>{
       return{
         ...prev,
@@ -148,7 +151,7 @@ export function ProductTable({navigate }: DataTableProps) {
     page: pagination.pageIndex + 1,
     limit: pagination.pageSize,
     search:searchInput,
-    sortBy:(sorting.length?sorting[0].id:undefined ) as ProductCategorySortField |undefined,
+    sortBy:(sorting.length?sorting[0].id:undefined ) as ProductSortField |undefined,
     order:sorting.length?sorting[0].desc?"desc":"asc":undefined,
   })
 }, [pagination,sorting,searchInput])

@@ -37,13 +37,10 @@ export const updateProductSchema = z.object({
 export const listProductsQuerySchema = z.object({
     page: z.coerce.number().min(1).default(1).optional(),
     limit: z.coerce.number().min(1).max(100).default(10).optional(),
-    
     search: z.string().optional(),
-    
     tag: z.array(z.string()).optional(),
     category: z.string().optional(),
-    
-    sortBy: z.enum(["createdAt", "price"]).default("createdAt").optional(),
+    sortBy: z.enum(["createdAt", "price","name"]).default("createdAt").optional(),
     order: z.enum(["asc", "desc"]).default("desc").optional(),
 });
 
@@ -70,6 +67,15 @@ export const PRODUCT_CATEGORY_SORT_FIELDS = [
   'createdAt',
   'name',
 ] as const
+
+
+export const PRODUCT_SORT_FIELDS = [
+  'createdAt',
+  'name',
+  'price',
+] as const
+
+export type ProductSortField = (typeof PRODUCT_SORT_FIELDS)[number]
 
 export type ProductCategorySortField =(typeof PRODUCT_CATEGORY_SORT_FIELDS)[number]
 

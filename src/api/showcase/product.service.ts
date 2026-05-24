@@ -1,5 +1,5 @@
 
-import { CreateProductDTO, ListProductsQueryDTO, UpdateProductDTO } from "@/Types/request/showcase-request";
+import type { CreateProductDTO, ListProductsQueryDTO, UpdateProductDTO } from "@/Types/request/showcase-request";
 import { apiClient } from "../apiClient";
 import ENDPOINTS from "../endpoints";
 
@@ -14,7 +14,7 @@ export function getProductList(query:ListProductsQueryDTO,companyId:string) {
       ([_, value]) => value !== undefined
     )
   );
-  let queryParams:string = new URLSearchParams(filteredQuery as any).toString();
+  const queryParams:string = new URLSearchParams(filteredQuery as any).toString();
   return apiClient.get(ENDPOINTS.showcase.listProductByCompanyId(companyId, queryParams)).then(res => res.data)
 }
 
@@ -67,12 +67,9 @@ export function createProduct(param:{data:CreateProductDTO}){
   fd.append("productCategoryId",productCategoryId);
   fd.append("price",String(price));
 
-  
-
   if(!!description){
     fd.append("description",description);
   }
-
 
   if(!!originalPrice){
     fd.append("originalPrice",String(originalPrice));
@@ -81,7 +78,6 @@ export function createProduct(param:{data:CreateProductDTO}){
   if(!!stock){
     fd.append("stock",String(stock))
   }
-
 
   if(!!tags){
     tags.forEach((tag) => {

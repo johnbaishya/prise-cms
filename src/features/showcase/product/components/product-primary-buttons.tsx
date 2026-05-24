@@ -2,8 +2,14 @@ import { MailPlus, UserPlus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { openShowcaseDialog } from '@/stores/actions/showcase-actions'
 // import { useUsers } from './category-provider'
+import { type NavigateFn,} from "@tanstack/react-router"
 
-export function ProductPrimaryButtons() {
+
+type PropType = {
+  navigate:NavigateFn
+}
+
+export function ProductPrimaryButtons({navigate}:PropType) {
   // const { setOpen } = useUsers()
   return (
     <div className='flex gap-2'>
@@ -16,7 +22,8 @@ export function ProductPrimaryButtons() {
       </Button> */}
       <Button className='space-x-1' 
       onClick={()=>{
-        openShowcaseDialog("add");
+        // openShowcaseDialog("add");
+        navigate({to:"/showcase/product/add"})
       }}
       >
         <span>Add New Product</span> <UserPlus size={18} />

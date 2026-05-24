@@ -2,6 +2,19 @@ import {z} from "zod";
 import { IGallery } from "./core-entities";
 
 
+const productCategoryAndTagSchema = z.object({
+  _id:z.string(),
+  name:z.string(),
+  slug:z.string(),
+  description:z.string(),
+  company:z.string(),
+  image:z.union([
+    z.string(),
+    z.instanceof(File)
+  ]) ,
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
+})
 
 const productSchema = z.object({
   _id:z.string(),
@@ -11,8 +24,8 @@ const productSchema = z.object({
   originalPrice: z.number().optional(),
   price: z.number(),
   company: z.string(),
-  productCategory: z.string(),
-  tags: z.array(z.string()),
+  productCategory:productCategoryAndTagSchema,
+  tags: z.array(productCategoryAndTagSchema),
   stock: z.number()
 })
 
@@ -31,19 +44,7 @@ export type IProduct = z.infer<typeof productSchema>;
 //   stock: number;
 // }
 
-const productCategoryAndTagSchema = z.object({
-  _id:z.string(),
-  name:z.string(),
-  slug:z.string(),
-  description:z.string(),
-  company:z.string(),
-  image:z.union([
-    z.string(),
-    z.instanceof(File)
-  ]) ,
-  createdAt: z.coerce.date(),
-  updatedAt: z.coerce.date(),
-})
+
 
 export type IProductCategory = z.infer<typeof productCategoryAndTagSchema>
 export type IProductTag = z.infer<typeof productCategoryAndTagSchema>

@@ -36,7 +36,7 @@ export function Product() {
               Manage your Product and their details here.
             </p>
           </div>
-          <ProductPrimaryButtons/>
+          <ProductPrimaryButtons navigate = {navigate}/>
         </div>
         <ProductTable navigate={navigate} />
       </Main>

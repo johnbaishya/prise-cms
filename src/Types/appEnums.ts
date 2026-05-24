@@ -9,4 +9,5 @@ export enum QueryKey {
   ADD_CATEGORY = 'add-category',
   LIST_PRODUCT_TAG = 'list-product-tag',
   LIST_PRODUCT_TAG_ALL = 'list-product-tag-all',
+  LIST_PRODUCT = "list-product"
 }

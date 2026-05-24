@@ -4,9 +4,9 @@ import { DataTableColumnHeader } from '@/components/data-table'
 import { LongText } from '@/components/long-text'
 import moment from 'moment'
 import { DataTableRowActions } from './data-table-row-actions'
-import { IProductCategory } from '@/Types/entities/showcase-entities'
+import type{ IProduct } from '@/Types/entities/showcase-entities'
 
-export const productColumns: ColumnDef<IProductCategory>[] = [
+export const productColumns: ColumnDef<IProduct>[] = [
   {
     accessorKey: 'name',
     header: ({ column }) => (
@@ -35,6 +35,68 @@ export const productColumns: ColumnDef<IProductCategory>[] = [
     ),
     cell: ({ row }) => {
       return <LongText className='max-w-36'>{row.getValue("slug")}</LongText>
+    },
+    // meta: { className: 'w-36' },
+    enableSorting:false,
+  },
+  {
+    accessorKey: 'price',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='Price' />
+    ),
+    cell: ({ row }) => {
+      return <LongText className='max-w-36'>{row.getValue("price")}</LongText>
+    },
+    // meta: { className: 'w-36' },
+    enableSorting:false,
+  },
+  {
+    accessorKey: 'originalPrice',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='Original Price' />
+    ),
+    cell: ({ row }) => {
+      return <LongText className='max-w-36'>{row.getValue("originalPrice")}</LongText>
+    },
+    // meta: { className: 'w-36' },
+    enableSorting:false,
+  },
+  {
+    accessorKey: 'productCategory',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='Category' />
+    ),
+    cell: ({ row }) => {
+      // return <LongText className='max-w-36'>{row.getValue("productCategory")?.name}</LongText>
+      return <LongText className='max-w-36'>{row.original?.productCategory?.name}</LongText>
+    },
+    // meta: { className: 'w-36' },
+    enableSorting:false,
+  },
+  {
+    accessorKey: 'tags',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='Tags' />
+    ),
+    cell: ({ row }) => {
+      // return <LongText className='max-w-36'>{row.getValue("productCategory")?.name}</LongText>
+      return <LongText className='max-w-36'>
+        {row.original?.tags.map(item=>item.name).join(", ")}
+        </LongText>
+    },
+    // meta: { className: 'w-36' },
+    enableSorting:false,
+  },
+  {
+    accessorKey: 'stock',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='Stock Available' />
+    ),
+    cell: ({ row }) => {
+      // return <LongText className='max-w-36'>{row.getValue("productCategory")?.name}</LongText>
+      return <LongText className='max-w-36'>
+        {row.original.stock}
+        </LongText>
     },
     // meta: { className: 'w-36' },
     enableSorting:false,
