@@ -1,4 +1,4 @@
-import { IProductCategory, IProductTag } from "@/Types/entities/showcase-entities"
+import type { IProduct, IProductCategory, IProductTag, IProductWithGallery } from "@/Types/entities/showcase-entities"
 import { create } from "zustand"
 
 
@@ -11,6 +11,7 @@ export interface ShowcaseStateData {
         productDialog:DialogType,
         selectedCategoryRow:IProductCategory|null,
         selectedProductTagRow:IProductTag|null
+        selectedProductRow:IProductWithGallery|null,
 }
 
 export interface ShowcaseState extends ShowcaseStateData{
@@ -25,6 +26,7 @@ const initialState:ShowcaseStateData = {
     productDialog:null,
     selectedCategoryRow:null,
     selectedProductTagRow:null,
+    selectedProductRow:null,
 }
 
 export const useShowcaseStore = create<ShowcaseState>()((set)=>{

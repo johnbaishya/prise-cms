@@ -4,8 +4,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { QueryKey } from '@/Types/appEnums'
 import AsyncSelect from 'react-select/async'
-import { getSelectedCompanyId, showAppLoader } from '@/stores/actions/app-actions'
-import { Button } from '@/components/ui/button'
+import { getSelectedCompanyId, showAppLoader, showConfirmDialog } from '@/stores/actions/app-actions'
+import { Button, buttonVariants } from '@/components/ui/button'
 import {
   Form,
   FormControl,
@@ -20,24 +20,35 @@ import { Textarea } from '@/components/ui/textarea'
 import { getAllProductCategoryList } from '@/api/showcase/product-category.service'
 import { getAllProductTagList } from '@/api/showcase/product-tag.service'
 import { getReactSelectLoadOptions, mapDataToSelectOption } from '@/lib/react-select-option-handler'
-import { createProduct } from '@/api/showcase/product.service'
+import { addProductGallery, createProduct, getProductGallery } from '@/api/showcase/product.service'
 import { toast } from 'sonner'
 import { type CreateProductDTO } from '@/Types/request/showcase-request'
 import { defaultAddProductForm } from './product.constants'
-import { type AddProductForm, addProductformSchema } from './product.types'
+import { type AddProductForm, addProductformSchema, EditProductForm } from './product.types'
 import { getRouteApi } from '@tanstack/react-router'
+import { useShowcaseStore } from '@/stores/showcase-store'
+import { mapProductToForm } from './product.utils'
+import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
+import { deleteGalleryImage } from '@/api/core/gallery.service'
+import { Skeleton } from '@/components/ui/skeleton'
+import { IGallery } from '@/Types/entities/core-entities'
+import { SelectedImagesDialog } from '@/components/selected-images-dialog'
+import { cn } from '@/lib/utils'
 
 
 const route = getRouteApi('/_authenticated/showcase/product/add')
 
 
 
-export default function AddProduct() {
+export default function EditProduct() {
 
   const navigate = route.useNavigate()
-  const form = useForm<AddProductForm>({
+  const { selectedProductRow } = useShowcaseStore(state => state)
+  const [selectedImages, setSelectedImages] = useState<File[]>([]);
+
+  const form = useForm<EditProductForm>({
     resolver: zodResolver(addProductformSchema),
-    defaultValues:defaultAddProductForm()
+    defaultValues: selectedProductRow ? mapProductToForm(selectedProductRow) : defaultAddProductForm(),
   })
 
   const [previewImages, setPreviewImages] = useState<string[]>([])
@@ -57,31 +68,36 @@ export default function AddProduct() {
   const imagesInputWatcher = form.watch('images')
   const categoryWatcher = form.watch("productCategoryId")
 
-  const { data: categoryList, isLoading:categoriesLoading } = useQuery({
+  const { data: categoryList, isLoading: categoriesLoading } = useQuery({
     queryKey: [QueryKey.LIST_PRODUCT_CATEGORY_ALL],
-    queryFn: () => getAllProductCategoryList( getSelectedCompanyId()),
+    queryFn: () => getAllProductCategoryList(getSelectedCompanyId()),
   })
 
-  
-  const { data: tagList, isLoading:tagsLoading } = useQuery({
+
+  const { data: tagList, isLoading: tagsLoading } = useQuery({
     queryKey: [QueryKey.LIST_PRODUCT_TAG_ALL],
-    queryFn: () => getAllProductTagList( getSelectedCompanyId()),
+    queryFn: () => getAllProductTagList(getSelectedCompanyId()),
   })
-  
 
-  const categoryLoadOptions = getReactSelectLoadOptions(categoryList?.data||[])
-  const defaultCategoryOptions = mapDataToSelectOption(categoryList?.data||[])
-  const tagLoadOptions = getReactSelectLoadOptions(tagList?.data||[]);
-  const defaultTagOptions = mapDataToSelectOption(tagList?.data||[]);
+  const { data: galleryData, isLoading: galleryLoading } = useQuery({
+    queryKey: [QueryKey.LIST_PRODUCT_GALLERY, selectedProductRow?._id],
+    queryFn: () => getProductGallery({ id: selectedProductRow?._id })
+  })
 
 
-  const onSubmit = (values:AddProductForm)=>{
-    
+  const categoryLoadOptions = getReactSelectLoadOptions(categoryList?.data || [])
+  const defaultCategoryOptions = mapDataToSelectOption(categoryList?.data || [])
+  const tagLoadOptions = getReactSelectLoadOptions(tagList?.data || []);
+  const defaultTagOptions = mapDataToSelectOption(tagList?.data || []);
+
+
+  const onSubmit = (values: AddProductForm) => {
+
     const companyId = getSelectedCompanyId();
     const productCategoryId = values.productCategoryId.value;
-    const tags = values?.tags?.map(item=>item.value);
-    const data:CreateProductDTO = {...values,companyId,productCategoryId,tags};
-    productAddMutation.mutate({data})
+    const tags = values?.tags?.map(item => item.value);
+    const data: CreateProductDTO = { ...values, companyId, productCategoryId, tags };
+    productAddMutation.mutate({ data })
     // console.log("submit",values)
     // console.log(form);
   }
@@ -91,29 +107,79 @@ export default function AddProduct() {
 
 
   const productAddMutation = useMutation({
-  mutationFn:createProduct,
-  onMutate:()=>{showAppLoader(true)},
-  onSettled:()=>{showAppLoader(false)},
-  onSuccess:()=>{
-    // closeShowcaseDialog();
-    form.reset(defaultAddProductForm());
-    navigate({
-      to:"/showcase/product",
-    })
-    toast.success("Product added Successfully !!!");
-    queryClient.invalidateQueries({
-      queryKey:[QueryKey.LIST_PRODUCT_CATEGORY]
+    mutationFn: createProduct,
+    onMutate: () => { showAppLoader(true) },
+    onSettled: () => { showAppLoader(false) },
+    onSuccess: () => {
+      // closeShowcaseDialog();
+      form.reset(defaultAddProductForm());
+      navigate({
+        to: "/showcase/product",
+      })
+      toast.success("Product added Successfully !!!");
+      queryClient.invalidateQueries({
+        queryKey: [QueryKey.LIST_PRODUCT_CATEGORY]
+      });
+      // setSelectedProductCategoryRow(null)
+    }
+  });
+
+
+  const galleryDeleteMutation = useMutation({
+    mutationFn: deleteGalleryImage,
+    onMutate: () => { showAppLoader(true) },
+    onSettled: () => { showAppLoader(false) },
+    onSuccess: () => {
+      toast.success("Product added Successfully !!!");
+      queryClient.invalidateQueries({
+        queryKey: [QueryKey.LIST_PRODUCT_GALLERY, selectedProductRow?._id]
+      })
+    }
+  })
+
+
+
+  const addProductGalleryMutation = useMutation({
+    mutationFn: addProductGallery,
+    onMutate: () => { showAppLoader(true) },
+    onSettled: () => { showAppLoader(false) },
+    onSuccess: (data) => {
+      console.log(data);
+      setSelectedImages([])
+      toast.success("Images added Successfully !!!");
+      queryClient.invalidateQueries({
+        queryKey: [QueryKey.LIST_PRODUCT_GALLERY, selectedProductRow?._id]
+      })
+    }
+  })
+
+
+
+
+  const handleDeleteImage = async (image: IGallery) => {
+
+    const access = await showConfirmDialog({
+      title: "Delete Image ?",
+      description: "Are you sure want to delete the image",
+      confirmText: "Delete",
+      cancelText: "Cancel",
+      destructive: true
     });
-    // setSelectedProductCategoryRow(null)
+
+    if (!access) {
+      return;
+    }
+
+    console.log("start from here", image)
+    galleryDeleteMutation.mutate({ id: image._id });
   }
-});
 
 
 
 
-  useEffect(()=>{
+  useEffect(() => {
     const cat = form.getValues("productCategoryId")
-  },[categoryWatcher])
+  }, [categoryWatcher])
 
   useEffect(() => {
     handleImagePreview()
@@ -124,9 +190,9 @@ export default function AddProduct() {
     <div className='mx-auto w-full max-w-2xl px-4 py-6'>
       {/* Header */}
       <div className='mb-6'>
-        <h1 className='text-2xl font-semibold'>Add New Product</h1>
+        <h1 className='text-2xl font-semibold'>Edit Product</h1>
         <p className='text-sm text-muted-foreground'>
-          Create new Product here.
+          Update Existing Product here.
         </p>
       </div>
 
@@ -263,7 +329,7 @@ export default function AddProduct() {
                   </FormLabel>
                   <div className='md:col-span-4'>
                     <FormControl>
-                     <AsyncSelect cacheOptions loadOptions={categoryLoadOptions} defaultOptions={defaultCategoryOptions} {...field}/>
+                      <AsyncSelect cacheOptions loadOptions={categoryLoadOptions} defaultOptions={defaultCategoryOptions} {...field} />
                       {/* <Select
                         placeholder='Select a category for product'
                         {...field}
@@ -303,10 +369,10 @@ export default function AddProduct() {
                   </FormLabel>
                   <div className='md:col-span-4'>
                     <FormControl>
-                      <AsyncSelect 
-                        isMulti 
-                        cacheOptions 
-                        loadOptions={tagLoadOptions} 
+                      <AsyncSelect
+                        isMulti
+                        cacheOptions
+                        loadOptions={tagLoadOptions}
                         defaultOptions={defaultTagOptions}
                         {...field}
                       />
@@ -384,41 +450,78 @@ export default function AddProduct() {
               )}
             />
 
-            {previewImages.length > 0 && (
-              <div className='grid grid-cols-1 gap-2 md:grid-cols-6 md:items-start'>
-                {previewImages.map((item) => {
-                  return (
-                    <ImageThumbnail
-                      key={item}
-                      src={item}
-                      className='md:col-span-2 md:text-right'
-                    />
-                  )
-                })}
-              </div>
-            )}
-            {/* <div className='grid grid-cols-1 gap-2 md:grid-cols-6 md:items-start'>
-              <ImageThumbnail
-                src='https://picsum.photos/300/200'
-                className='md:col-span-2 md:text-right'
-              />
-              <ImageThumbnail
-                src='https://picsum.photos/300'
-                className='md:col-span-2 md:text-right'
-              />
-              <ImageThumbnail
-                src='https://picsum.photos/300/200'
-                className='md:col-span-2 md:text-right'
-              />
-            </div> */}
-
             {/* Actions */}
             <div className='flex justify-end pt-4'>
-              <Button type='submit'>Create Product</Button>
+              <Button type='submit'>Update Product</Button>
             </div>
           </form>
         </Form>
       </div>
+      <Card className='mt-5'>
+        <CardHeader>
+          Product Images
+        </CardHeader>
+        <CardContent>
+          <div className='grid grid-cols-1 gap-2 md:grid-cols-6 md:items-start'>
+            {galleryLoading &&
+              <>
+                <Skeleton className='md:col-span-2 md:text-right m-5 h-20' />
+                <Skeleton className='md:col-span-2 md:text-right m-5 h-20' />
+                <Skeleton className='md:col-span-2 md:text-right m-5 h-20' />
+              </>
+            }
+
+            {
+              galleryData?.map((item) => {
+                return (
+                  <ImageThumbnail
+                    data={item}
+                    key={item.key}
+                    src={item.location}
+                    className='md:col-span-2 md:text-right border-2'
+                    deletable
+                    onDelete={(image) => {
+                      handleDeleteImage(image)
+
+                    }}
+                  />
+                )
+              })
+            }
+          </div>
+        </CardContent>
+        <CardFooter>
+          <div className='flex justify-center pt-4 w-full'>
+            <label for="file-upload" class="custom-file-upload" className={cn(buttonVariants({ variant: "outline", size: "default" }))} >
+              Add More Images
+              {/* <Button variant={"outline"} >Add More Images..</Button> */}
+            </label>
+            <Input
+              type='file'
+              accept='image/*'
+              id='file-upload'
+              multiple
+              hidden
+              onChange={(e) => {
+                if (!e.target.files) return;
+                setSelectedImages(Array.from(e.target.files))
+              }}
+            //  className={cn(buttonVariants({ variant: "default", size: "default" }))} 
+            />
+          </div>
+        </CardFooter>
+      </Card>
+      <SelectedImagesDialog
+        open={selectedImages.length > 0}
+        images={selectedImages}
+        onClose={(state) => {
+          setSelectedImages([])
+        }}
+        onSubmit={() => {
+          if (!selectedProductRow?._id) return
+          addProductGalleryMutation.mutate({ id: selectedProductRow?._id, images: selectedImages })
+        }}
+      />
     </div>
   )
 }

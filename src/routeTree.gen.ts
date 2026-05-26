@@ -44,6 +44,7 @@ import { Route as AuthenticatedErrorsErrorRouteImport } from './routes/_authenti
 import { Route as AuthenticatedShowcaseTagIndexRouteImport } from './routes/_authenticated/showcase/tag/index'
 import { Route as AuthenticatedShowcaseProductIndexRouteImport } from './routes/_authenticated/showcase/product/index'
 import { Route as AuthenticatedShowcaseCategoryIndexRouteImport } from './routes/_authenticated/showcase/category/index'
+import { Route as AuthenticatedShowcaseProductEditRouteImport } from './routes/_authenticated/showcase/product/edit'
 import { Route as AuthenticatedShowcaseProductAddRouteImport } from './routes/_authenticated/showcase/product/add'
 
 const TestRoute = TestRouteImport.update({
@@ -231,6 +232,12 @@ const AuthenticatedShowcaseCategoryIndexRoute =
     path: '/showcase/category/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedShowcaseProductEditRoute =
+  AuthenticatedShowcaseProductEditRouteImport.update({
+    id: '/showcase/product/edit',
+    path: '/showcase/product/edit',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedShowcaseProductAddRoute =
   AuthenticatedShowcaseProductAddRouteImport.update({
     id: '/showcase/product/add',
@@ -269,6 +276,7 @@ export interface FileRoutesByFullPath {
   '/tasks/': typeof AuthenticatedTasksIndexRoute
   '/users/': typeof AuthenticatedUsersIndexRoute
   '/showcase/product/add': typeof AuthenticatedShowcaseProductAddRoute
+  '/showcase/product/edit': typeof AuthenticatedShowcaseProductEditRoute
   '/showcase/category/': typeof AuthenticatedShowcaseCategoryIndexRoute
   '/showcase/product/': typeof AuthenticatedShowcaseProductIndexRoute
   '/showcase/tag/': typeof AuthenticatedShowcaseTagIndexRoute
@@ -303,6 +311,7 @@ export interface FileRoutesByTo {
   '/tasks': typeof AuthenticatedTasksIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
   '/showcase/product/add': typeof AuthenticatedShowcaseProductAddRoute
+  '/showcase/product/edit': typeof AuthenticatedShowcaseProductEditRoute
   '/showcase/category': typeof AuthenticatedShowcaseCategoryIndexRoute
   '/showcase/product': typeof AuthenticatedShowcaseProductIndexRoute
   '/showcase/tag': typeof AuthenticatedShowcaseTagIndexRoute
@@ -342,6 +351,7 @@ export interface FileRoutesById {
   '/_authenticated/tasks/': typeof AuthenticatedTasksIndexRoute
   '/_authenticated/users/': typeof AuthenticatedUsersIndexRoute
   '/_authenticated/showcase/product/add': typeof AuthenticatedShowcaseProductAddRoute
+  '/_authenticated/showcase/product/edit': typeof AuthenticatedShowcaseProductEditRoute
   '/_authenticated/showcase/category/': typeof AuthenticatedShowcaseCategoryIndexRoute
   '/_authenticated/showcase/product/': typeof AuthenticatedShowcaseProductIndexRoute
   '/_authenticated/showcase/tag/': typeof AuthenticatedShowcaseTagIndexRoute
@@ -379,6 +389,7 @@ export interface FileRouteTypes {
     | '/tasks/'
     | '/users/'
     | '/showcase/product/add'
+    | '/showcase/product/edit'
     | '/showcase/category/'
     | '/showcase/product/'
     | '/showcase/tag/'
@@ -413,6 +424,7 @@ export interface FileRouteTypes {
     | '/tasks'
     | '/users'
     | '/showcase/product/add'
+    | '/showcase/product/edit'
     | '/showcase/category'
     | '/showcase/product'
     | '/showcase/tag'
@@ -451,6 +463,7 @@ export interface FileRouteTypes {
     | '/_authenticated/tasks/'
     | '/_authenticated/users/'
     | '/_authenticated/showcase/product/add'
+    | '/_authenticated/showcase/product/edit'
     | '/_authenticated/showcase/category/'
     | '/_authenticated/showcase/product/'
     | '/_authenticated/showcase/tag/'
@@ -719,6 +732,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedShowcaseCategoryIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/showcase/product/edit': {
+      id: '/_authenticated/showcase/product/edit'
+      path: '/showcase/product/edit'
+      fullPath: '/showcase/product/edit'
+      preLoaderRoute: typeof AuthenticatedShowcaseProductEditRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/showcase/product/add': {
       id: '/_authenticated/showcase/product/add'
       path: '/showcase/product/add'
@@ -763,6 +783,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedTasksIndexRoute: typeof AuthenticatedTasksIndexRoute
   AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
   AuthenticatedShowcaseProductAddRoute: typeof AuthenticatedShowcaseProductAddRoute
+  AuthenticatedShowcaseProductEditRoute: typeof AuthenticatedShowcaseProductEditRoute
   AuthenticatedShowcaseCategoryIndexRoute: typeof AuthenticatedShowcaseCategoryIndexRoute
   AuthenticatedShowcaseProductIndexRoute: typeof AuthenticatedShowcaseProductIndexRoute
   AuthenticatedShowcaseTagIndexRoute: typeof AuthenticatedShowcaseTagIndexRoute
@@ -779,6 +800,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedTasksIndexRoute: AuthenticatedTasksIndexRoute,
   AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
   AuthenticatedShowcaseProductAddRoute: AuthenticatedShowcaseProductAddRoute,
+  AuthenticatedShowcaseProductEditRoute: AuthenticatedShowcaseProductEditRoute,
   AuthenticatedShowcaseCategoryIndexRoute:
     AuthenticatedShowcaseCategoryIndexRoute,
   AuthenticatedShowcaseProductIndexRoute:

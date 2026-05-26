@@ -3,7 +3,7 @@ import { cn } from '@/lib/utils'
 import { DataTableColumnHeader } from '@/components/data-table'
 import { LongText } from '@/components/long-text'
 import moment from 'moment'
-import { DataTableRowActions } from './data-table-row-actions'
+import { ProductTableRowActions } from './product-table-row-actions'
 import type{ IProduct } from '@/Types/entities/showcase-entities'
 
 export const productColumns: ColumnDef<IProduct>[] = [
@@ -130,6 +130,6 @@ export const productColumns: ColumnDef<IProduct>[] = [
       header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Actions' />
     ),
-      cell: DataTableRowActions,
+      cell: ProductTableRowActions,
   },
 ]

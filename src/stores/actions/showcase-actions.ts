@@ -1,5 +1,5 @@
-import { DialogType, ShowcaseStateData, useShowcaseStore } from "../showcase-store";
-import { IProductCategory, IProductTag } from "@/Types/entities/showcase-entities";
+import   { type DialogType, type ShowcaseStateData, useShowcaseStore } from "../showcase-store";
+import type { IProduct, IProductCategory, IProductTag } from "@/Types/entities/showcase-entities";
 
 // function to update the showcase store
 export const updateShowcaseState = (data:Partial<ShowcaseStateData>)=>{
@@ -47,6 +47,14 @@ export const setSelectedProductTagRow= (row:IProductTag|null)=>{
 
 
 
+export const setSelectedProductRow= (row:IProduct|null)=>{
+    updateShowcaseState({
+        selectedProductRow:row,
+    })
+}
+
+
+
 export const resetCategoryDialogs = ()=>{
     updateShowcaseState({
         productCategoryDialog:null,
@@ -59,5 +67,13 @@ export const resetProductTagDialogs = ()=>{
     updateShowcaseState({
         productTagDialog:null,
         selectedProductTagRow:null
+    })
+}
+
+
+export const resetProductDialogs = ()=>{
+    updateShowcaseState({
+        productDialog:null,
+        selectedProductRow:null,
     })
 }

@@ -45,12 +45,15 @@ const ENDPOINTS = {
       const uri: string = `/showcase/company/${companyId}/products?${queryParams}`
       return uri
     },
-    updateProduct: (productId: string): string =>
-      `/showcase/product/${productId}`,
+    updateProduct: (productId: string): string =>`/showcase/product/${productId}`,
     createProduct: '/showcase/product',
-    deleteProduct: (productId: string): string =>
-      `/showcase/product/${productId}`,
+    deleteProduct: (productId: string): string => `/showcase/product/${productId}`,
+    listProductGallery:(productId:string)=>`/showcase/product/${productId}/gallery`,
+    addProductGallery:(productId:string)=>`/showcase/product/${productId}/gallery`,
   },
+  core:{
+    deleteGalleryimage:(galleryId:string)=>`/gallery/${galleryId}`
+  }
 }
 
 export default ENDPOINTS

@@ -7,6 +7,7 @@ import { NavigationProgress } from '@/components/navigation-progress'
 import { GeneralError } from '@/features/errors/general-error'
 import { NotFoundError } from '@/features/errors/not-found-error'
 import GlobalLoader from '@/components/globalLoader'
+import { AppConfirmDialog } from '@/components/ui/app-confirm-dialog'
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient
@@ -18,6 +19,7 @@ export const Route = createRootRouteWithContext<{
         <Outlet />
         <Toaster duration={5000} />
         <GlobalLoader/>
+        <AppConfirmDialog/>
         {import.meta.env.MODE === 'development' && (
           <>
             <ReactQueryDevtools buttonPosition='bottom-left' />

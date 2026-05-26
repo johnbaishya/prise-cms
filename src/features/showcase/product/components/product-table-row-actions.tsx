@@ -11,14 +11,18 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { useShowcaseStore } from '@/stores/showcase-store'
-import { openShowcaseDialog, setSelectedProductCategoryRow, updateShowcaseState } from '@/stores/actions/showcase-actions'
-import { IProductCategory } from '@/Types/entities/showcase-entities'
+import { openShowcaseDialog, setSelectedProductCategoryRow, setSelectedProductRow, updateShowcaseState } from '@/stores/actions/showcase-actions'
+import type { IProduct } from '@/Types/entities/showcase-entities'
+import { getRouteApi } from '@tanstack/react-router'
 
 type DataTableRowActionsProps = {
-  row: Row<IProductCategory>
+  row: Row<IProduct>
 }
 
-export function DataTableRowActions({ row }: DataTableRowActionsProps) {
+const route = getRouteApi('/_authenticated/showcase/product/')
+
+export function ProductTableRowActions({ row }: DataTableRowActionsProps) {
+  const navigate = route.useNavigate()
   return (
     <>
       <DropdownMenu modal={false}>
@@ -34,7 +38,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
         <DropdownMenuContent align='end' className='w-40'>
           <DropdownMenuItem
             onClick={() => {
-              setSelectedProductCategoryRow(row.original)
+              setSelectedProductRow(row.original)
               updateShowcaseState({
                 productCategoryDialog:"view"
               })
@@ -47,9 +51,9 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => {
-              setSelectedProductCategoryRow(row.original)
-              updateShowcaseState({
-                productCategoryDialog:"edit"
+              setSelectedProductRow(row.original)
+              navigate({
+                to:"/showcase/product/edit"
               })
             }}
           >

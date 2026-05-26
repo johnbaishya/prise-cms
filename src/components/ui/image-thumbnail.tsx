@@ -1,6 +1,7 @@
 import { Trash } from 'lucide-react'
 import { Button } from './button'
 import { Card, CardContent } from './card'
+import { IGallery } from '@/Types/entities/core-entities'
 
 type ImageThumbnailProps = {
   src?: string
@@ -9,11 +10,12 @@ type ImageThumbnailProps = {
   imageStyle?: StylePropertyMap
   size?: number
   deletable?: boolean
-  onDelete?: () => void
+  onDelete?: (data: IGallery) => void
+  data?: IGallery,
 }
 
 export const ImageThumbnail = (props: ImageThumbnailProps) => {
-  const { src, className, style, size = 400, deletable, onDelete } = props
+  const { src, className, style, size = 400, deletable, onDelete, data } = props
   return (
     <div className={className} style={{ position: 'relative' }}>
       {deletable && (
@@ -24,7 +26,7 @@ export const ImageThumbnail = (props: ImageThumbnailProps) => {
           onClick={(e) => {
             e.preventDefault()
             if (onDelete) {
-              onDelete()
+              onDelete(data)
             }
           }}
         >
@@ -32,7 +34,7 @@ export const ImageThumbnail = (props: ImageThumbnailProps) => {
         </Button>
       )}
       <img
-        src={src ? src : 'https://picsum.photos/200'}
+        src={src ? src : data?.location ? data.location : 'https://picsum.photos/200'}
         style={{ aspectRatio: '1/1' }}
       />
     </div>

@@ -2,6 +2,7 @@
 import type { CreateProductDTO, ListProductsQueryDTO, UpdateProductDTO } from "@/Types/request/showcase-request";
 import { apiClient } from "../apiClient";
 import ENDPOINTS from "../endpoints";
+import { IGallery } from "@/Types/entities/core-entities";
 
 
 
@@ -107,4 +108,35 @@ export function createProduct(param:{data:CreateProductDTO}){
 
 export function deleteProduct(param:{id:string}){
   return apiClient.delete(ENDPOINTS.showcase.deleteProduct(param.id));
+}
+
+
+
+
+export const getProductGallery = (param:{id:string|null|undefined}):Promise<IGallery[]>=>{
+  if(!param.id){
+    return Promise.resolve([]);
+  }
+   const data =  apiClient.get(ENDPOINTS.showcase.listProductGallery(param.id)).then(res=>res.data);
+   return data;
+}
+
+
+
+export const addProductGallery = (param:{id:string,images:File[]})=>{
+
+  // if(!!images){
+  //   images.forEach((image)=>{
+  //       if(image instanceof File){
+  //           fd.append("images",image)
+  //       }
+  //   })
+  // }
+  const fd = new FormData();
+  param.images.forEach((image) => {
+    fd.append("images", image);
+  });
+
+
+  return apiClient.post(ENDPOINTS.showcase.addProductGallery(param.id),fd);
 }

@@ -26,7 +26,7 @@ const productSchema = z.object({
   company: z.string(),
   productCategory:productCategoryAndTagSchema,
   tags: z.array(productCategoryAndTagSchema),
-  stock: z.number()
+  stock: z.number(),
 })
 
 export type IProduct = z.infer<typeof productSchema>; 
