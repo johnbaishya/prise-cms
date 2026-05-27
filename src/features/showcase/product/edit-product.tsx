@@ -20,7 +20,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { getAllProductCategoryList } from '@/api/showcase/product-category.service'
 import { getAllProductTagList } from '@/api/showcase/product-tag.service'
 import { getReactSelectLoadOptions, mapDataToSelectOption } from '@/lib/react-select-option-handler'
-import { addProductGallery, createProduct, getProductGallery } from '@/api/showcase/product.service'
+import { addProductGallery, createProduct, getProductGallery, updateProduct } from '@/api/showcase/product.service'
 import { toast } from 'sonner'
 import { type CreateProductDTO } from '@/Types/request/showcase-request'
 import { defaultAddProductForm } from './product.constants'
@@ -97,7 +97,7 @@ export default function EditProduct() {
     const productCategoryId = values.productCategoryId.value;
     const tags = values?.tags?.map(item => item.value);
     const data: CreateProductDTO = { ...values, companyId, productCategoryId, tags };
-    productAddMutation.mutate({ data })
+    editProductMutation.mutate({ data, productId: selectedProductRow?._id })
     // console.log("submit",values)
     // console.log(form);
   }
@@ -106,8 +106,8 @@ export default function EditProduct() {
   const queryClient = useQueryClient();
 
 
-  const productAddMutation = useMutation({
-    mutationFn: createProduct,
+  const editProductMutation = useMutation({
+    mutationFn: updateProduct,
     onMutate: () => { showAppLoader(true) },
     onSettled: () => { showAppLoader(false) },
     onSuccess: () => {
@@ -116,9 +116,9 @@ export default function EditProduct() {
       navigate({
         to: "/showcase/product",
       })
-      toast.success("Product added Successfully !!!");
+      toast.success("Product updated Successfully !!!");
       queryClient.invalidateQueries({
-        queryKey: [QueryKey.LIST_PRODUCT_CATEGORY]
+        queryKey: [QueryKey.LIST_PRODUCT]
       });
       // setSelectedProductCategoryRow(null)
     }
@@ -411,44 +411,6 @@ export default function EditProduct() {
               )}
             />
             {/* Image */}
-            <FormField
-              control={form.control}
-              name='images'
-              render={({ field }) => (
-                <FormItem className='grid grid-cols-1 gap-2 md:grid-cols-6 md:items-start'>
-                  <FormLabel className='md:col-span-2 md:text-right'>
-                    Images
-                  </FormLabel>
-
-                  <div className='space-y-3 md:col-span-4'>
-                    <FormControl>
-                      <Input
-                        multiple
-                        type='file'
-                        accept='image/*'
-                        name={field.name}
-                        ref={field.ref}
-                        onChange={(e) => {
-                          const files = e.target.files
-                          if (files) {
-                            field.onChange(Array.from(files))
-                          }
-                        }}
-                      />
-                    </FormControl>
-
-                    {/* {previewImage && (
-                      <img
-                        src={previewImage}
-                        className="h-40 w-full rounded-md object-cover border"
-                      />
-                    )} */}
-
-                    <FormMessage />
-                  </div>
-                </FormItem>
-              )}
-            />
 
             {/* Actions */}
             <div className='flex justify-end pt-4'>

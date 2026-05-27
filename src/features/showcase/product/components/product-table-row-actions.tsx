@@ -39,8 +39,8 @@ export function ProductTableRowActions({ row }: DataTableRowActionsProps) {
           <DropdownMenuItem
             onClick={() => {
               setSelectedProductRow(row.original)
-              updateShowcaseState({
-                productCategoryDialog:"view"
+              navigate({
+                to: "/showcase/product/view"
               })
             }}
           >
@@ -53,7 +53,7 @@ export function ProductTableRowActions({ row }: DataTableRowActionsProps) {
             onClick={() => {
               setSelectedProductRow(row.original)
               navigate({
-                to:"/showcase/product/edit"
+                to: "/showcase/product/edit"
               })
             }}
           >

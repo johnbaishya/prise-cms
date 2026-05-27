@@ -40,38 +40,38 @@ type DataTableProps = {
   navigate: NavigateFn
 }
 
-export function ProductTable({navigate }: DataTableProps) {
+export function ProductTable({ navigate }: DataTableProps) {
   // Local UI-only states
   const [rowSelection, setRowSelection] = useState({})
-  const [pagination,setPagination] = useState({
+  const [pagination, setPagination] = useState({
     pageIndex: 0,
     pageSize: 10,
   })
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const [sorting, setSorting] = useState<SortingState>([])
-  const [searchInput,setSearchInput] = useState("");
-  const [query,setQuery] = useState<ListProductsQueryDTO>({
-    search:"",
-    page:1,
-    limit:10,
-    category:"",
-    tag:[],
+  const [searchInput, setSearchInput] = useState("");
+  const [query, setQuery] = useState<ListProductsQueryDTO>({
+    search: "",
+    page: 1,
+    limit: 10,
+    category: "",
+    tag: [],
   });
 
-  
 
-  
-  
-  const { data:tableData, isLoading}= useQuery({
-    queryKey:[QueryKey.LIST_PRODUCT,query],
-    queryFn:()=>getProductList(query,getSelectedCompanyId())
+
+
+
+  const { data: tableData, isLoading } = useQuery({
+    queryKey: [QueryKey.LIST_PRODUCT, query],
+    queryFn: () => getProductList(query, getSelectedCompanyId())
   })
 
 
 
-  const updateQuery = (newData:Partial<ListProductsQueryDTO>)=>{
-    setQuery((prev=>{
-      return{
+  const updateQuery = (newData: Partial<ListProductsQueryDTO>) => {
+    setQuery((prev => {
+      return {
         ...prev,
         ...newData
       }
@@ -104,17 +104,17 @@ export function ProductTable({navigate }: DataTableProps) {
   // })
 
 
-  
 
 
-    
 
-   
+
+
+
 
 
   // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
-    data: tableData?.data||[],
+    data: tableData?.data || [],
     columns,
     state: {
       sorting,
@@ -124,7 +124,7 @@ export function ProductTable({navigate }: DataTableProps) {
       columnVisibility,
     },
     enableRowSelection: true,
-    onPaginationChange:setPagination,
+    onPaginationChange: setPagination,
     // onColumnFiltersChange,
     onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
@@ -136,7 +136,7 @@ export function ProductTable({navigate }: DataTableProps) {
     getFacetedUniqueValues: getFacetedUniqueValues(),
     manualPagination: true,
     pageCount: tableData?.meta?.totalPages ?? 0,
-    manualSorting:true,
+    manualSorting: true,
 
   })
 
@@ -147,14 +147,14 @@ export function ProductTable({navigate }: DataTableProps) {
   // }, [table, ensurePageInRange])
 
   useEffect(() => {
-  updateQuery({
-    page: pagination.pageIndex + 1,
-    limit: pagination.pageSize,
-    search:searchInput,
-    sortBy:(sorting.length?sorting[0].id:undefined ) as ProductSortField |undefined,
-    order:sorting.length?sorting[0].desc?"desc":"asc":undefined,
-  })
-}, [pagination,sorting,searchInput])
+    updateQuery({
+      page: pagination.pageIndex + 1,
+      limit: pagination.pageSize,
+      search: searchInput,
+      sortBy: (sorting.length ? sorting[0].id : undefined) as ProductSortField | undefined,
+      order: sorting.length ? sorting[0].desc ? "desc" : "asc" : undefined,
+    })
+  }, [pagination, sorting, searchInput])
 
   return (
     <div
@@ -163,10 +163,10 @@ export function ProductTable({navigate }: DataTableProps) {
         'flex flex-1 flex-col gap-4'
       )}
     >
-      
+
       <DataTableToolbar
         table={table}
-        searchPlaceholder='Filter Category...'
+        searchPlaceholder='Filter Products...'
         searchKey='name'
         // filters={[
         //   {
@@ -185,7 +185,7 @@ export function ProductTable({navigate }: DataTableProps) {
         //     options: roles.map((role) => ({ ...role })),
         //   },
         // ]}
-        onSearch={(data)=>{
+        onSearch={(data) => {
           // updateQuery({search:data})
           setSearchInput(data);
         }}
@@ -209,9 +209,9 @@ export function ProductTable({navigate }: DataTableProps) {
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                     </TableHead>
                   )
                 })}
@@ -220,62 +220,62 @@ export function ProductTable({navigate }: DataTableProps) {
           </TableHeader>
           <TableBody>
             {
-              isLoading?
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className='h-24 text-center items-center justify-center'
-                >
-                  <div className='flex items-center justify-center'>
-                  <ThreeDots
-                    visible={true}
-                    // height="80"
-                    width="80"
-                    color="#000"
-                    radius="4"
-                    ariaLabel="three-dots-loading"
-                    wrapperStyle={{}}
-                    wrapperClass=""
-                    />
-                  </div>
-                </TableCell>
-              </TableRow>
-              :<>
-                {table.getRowModel().rows?.length ? (
-                  table.getRowModel().rows.map((row) => (
-                    <TableRow
-                      key={row.id}
-                      data-state={row.getIsSelected() && 'selected'}
-                      className='group/row'
-                    >
-                      {row.getVisibleCells().map((cell) => (
-                        <TableCell
-                          key={cell.id}
-                          className={cn(
-                            'bg-background group-hover/row:bg-muted group-data-[state=selected]/row:bg-muted',
-                            cell.column.columnDef.meta?.className,
-                            cell.column.columnDef.meta?.tdClassName
-                          )}
-                        >
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                          )}
-                        </TableCell>
-                      ))}
+              isLoading ?
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className='h-24 text-center items-center justify-center'
+                  >
+                    <div className='flex items-center justify-center'>
+                      <ThreeDots
+                        visible={true}
+                        // height="80"
+                        width="80"
+                        color="#000"
+                        radius="4"
+                        ariaLabel="three-dots-loading"
+                        wrapperStyle={{}}
+                        wrapperClass=""
+                      />
+                    </div>
+                  </TableCell>
+                </TableRow>
+                : <>
+                  {table.getRowModel().rows?.length ? (
+                    table.getRowModel().rows.map((row) => (
+                      <TableRow
+                        key={row.id}
+                        data-state={row.getIsSelected() && 'selected'}
+                        className='group/row'
+                      >
+                        {row.getVisibleCells().map((cell) => (
+                          <TableCell
+                            key={cell.id}
+                            className={cn(
+                              'bg-background group-hover/row:bg-muted group-data-[state=selected]/row:bg-muted',
+                              cell.column.columnDef.meta?.className,
+                              cell.column.columnDef.meta?.tdClassName
+                            )}
+                          >
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext()
+                            )}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell
+                        colSpan={columns.length}
+                        className='h-24 text-center'
+                      >
+                        No results.
+                      </TableCell>
                     </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell
-                      colSpan={columns.length}
-                      className='h-24 text-center'
-                    >
-                      No results.
-                    </TableCell>
-                  </TableRow>
-                )}
-              </>
+                  )}
+                </>
             }
           </TableBody>
         </Table>

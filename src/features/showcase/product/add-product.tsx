@@ -37,7 +37,7 @@ export default function AddProduct() {
   const navigate = route.useNavigate()
   const form = useForm<AddProductForm>({
     resolver: zodResolver(addProductformSchema),
-    defaultValues:defaultAddProductForm()
+    defaultValues: defaultAddProductForm()
   })
 
   const [previewImages, setPreviewImages] = useState<string[]>([])
@@ -57,31 +57,31 @@ export default function AddProduct() {
   const imagesInputWatcher = form.watch('images')
   const categoryWatcher = form.watch("productCategoryId")
 
-  const { data: categoryList, isLoading:categoriesLoading } = useQuery({
+  const { data: categoryList, isLoading: categoriesLoading } = useQuery({
     queryKey: [QueryKey.LIST_PRODUCT_CATEGORY_ALL],
-    queryFn: () => getAllProductCategoryList( getSelectedCompanyId()),
+    queryFn: () => getAllProductCategoryList(getSelectedCompanyId()),
   })
 
-  
-  const { data: tagList, isLoading:tagsLoading } = useQuery({
+
+  const { data: tagList, isLoading: tagsLoading } = useQuery({
     queryKey: [QueryKey.LIST_PRODUCT_TAG_ALL],
-    queryFn: () => getAllProductTagList( getSelectedCompanyId()),
+    queryFn: () => getAllProductTagList(getSelectedCompanyId()),
   })
-  
-
-  const categoryLoadOptions = getReactSelectLoadOptions(categoryList?.data||[])
-  const defaultCategoryOptions = mapDataToSelectOption(categoryList?.data||[])
-  const tagLoadOptions = getReactSelectLoadOptions(tagList?.data||[]);
-  const defaultTagOptions = mapDataToSelectOption(tagList?.data||[]);
 
 
-  const onSubmit = (values:AddProductForm)=>{
-    
+  const categoryLoadOptions = getReactSelectLoadOptions(categoryList?.data || [])
+  const defaultCategoryOptions = mapDataToSelectOption(categoryList?.data || [])
+  const tagLoadOptions = getReactSelectLoadOptions(tagList?.data || []);
+  const defaultTagOptions = mapDataToSelectOption(tagList?.data || []);
+
+
+  const onSubmit = (values: AddProductForm) => {
+
     const companyId = getSelectedCompanyId();
     const productCategoryId = values.productCategoryId.value;
-    const tags = values?.tags?.map(item=>item.value);
-    const data:CreateProductDTO = {...values,companyId,productCategoryId,tags};
-    productAddMutation.mutate({data})
+    const tags = values?.tags?.map(item => item.value);
+    const data: CreateProductDTO = { ...values, companyId, productCategoryId, tags };
+    productAddMutation.mutate({ data })
     // console.log("submit",values)
     // console.log(form);
   }
@@ -91,29 +91,29 @@ export default function AddProduct() {
 
 
   const productAddMutation = useMutation({
-  mutationFn:createProduct,
-  onMutate:()=>{showAppLoader(true)},
-  onSettled:()=>{showAppLoader(false)},
-  onSuccess:()=>{
-    // closeShowcaseDialog();
-    form.reset(defaultAddProductForm());
-    navigate({
-      to:"/showcase/product",
-    })
-    toast.success("Product added Successfully !!!");
-    queryClient.invalidateQueries({
-      queryKey:[QueryKey.LIST_PRODUCT_CATEGORY]
-    });
-    // setSelectedProductCategoryRow(null)
-  }
-});
+    mutationFn: createProduct,
+    onMutate: () => { showAppLoader(true) },
+    onSettled: () => { showAppLoader(false) },
+    onSuccess: () => {
+      // closeShowcaseDialog();
+      form.reset(defaultAddProductForm());
+      navigate({
+        to: "/showcase/product",
+      })
+      toast.success("Product added Successfully !!!");
+      queryClient.invalidateQueries({
+        queryKey: [QueryKey.LIST_PRODUCT]
+      });
+      // setSelectedProductCategoryRow(null)
+    }
+  });
 
 
 
 
-  useEffect(()=>{
+  useEffect(() => {
     const cat = form.getValues("productCategoryId")
-  },[categoryWatcher])
+  }, [categoryWatcher])
 
   useEffect(() => {
     handleImagePreview()
@@ -263,7 +263,7 @@ export default function AddProduct() {
                   </FormLabel>
                   <div className='md:col-span-4'>
                     <FormControl>
-                     <AsyncSelect cacheOptions loadOptions={categoryLoadOptions} defaultOptions={defaultCategoryOptions} {...field}/>
+                      <AsyncSelect cacheOptions loadOptions={categoryLoadOptions} defaultOptions={defaultCategoryOptions} {...field} />
                       {/* <Select
                         placeholder='Select a category for product'
                         {...field}
@@ -303,10 +303,10 @@ export default function AddProduct() {
                   </FormLabel>
                   <div className='md:col-span-4'>
                     <FormControl>
-                      <AsyncSelect 
-                        isMulti 
-                        cacheOptions 
-                        loadOptions={tagLoadOptions} 
+                      <AsyncSelect
+                        isMulti
+                        cacheOptions
+                        loadOptions={tagLoadOptions}
                         defaultOptions={defaultTagOptions}
                         {...field}
                       />

@@ -27,25 +27,11 @@ export function getProductList(query:ListProductsQueryDTO,companyId:string) {
 
 
 
-export function updateProduct(param:{data:UpdateProductDTO,productId:string}){
-    const data = param.data;
-    // const {name,slug,description,image} = data;
-    // let fd = new FormData();
-    // if(name){
-    //     fd.append("name",name);
-    // }
-    // if(slug){
-    //     fd.append("slug",slug)
-    // }
-    // if(description){
-    //     fd.append("description",description)
-    // }
-    // if(image instanceof(File)){
-    //     fd.append("image",image)
-    // }
-
-
-  return apiClient.put(ENDPOINTS.showcase.updateProduct(param.productId),data);
+export function updateProduct(param:{data:UpdateProductDTO,productId:string|undefined}){
+  const {data,productId} = param;
+  if(!productId)
+    return
+  return apiClient.put(ENDPOINTS.showcase.updateProduct(productId),data);
 }
 
 
