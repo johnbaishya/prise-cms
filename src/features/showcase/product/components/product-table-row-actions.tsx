@@ -14,15 +14,54 @@ import { useShowcaseStore } from '@/stores/showcase-store'
 import { openShowcaseDialog, setSelectedProductCategoryRow, setSelectedProductRow, updateShowcaseState } from '@/stores/actions/showcase-actions'
 import type { IProduct } from '@/Types/entities/showcase-entities'
 import { getRouteApi } from '@tanstack/react-router'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { deleteProduct } from '@/api/showcase/product.service'
+import { showAppLoader, showConfirmDialog } from '@/stores/actions/app-actions'
+import { QueryKey } from '@/Types/appEnums'
+import { toast } from 'sonner'
 
 type DataTableRowActionsProps = {
   row: Row<IProduct>
 }
 
+
+
+
 const route = getRouteApi('/_authenticated/showcase/product/')
 
 export function ProductTableRowActions({ row }: DataTableRowActionsProps) {
   const navigate = route.useNavigate()
+
+  const handleDeleteProduct = async (row: IProduct) => {
+    const deleteAccess = await showConfirmDialog({
+      title: "Delete ?",
+      description: "Are you sure want to delete the product " + row.name,
+      cancelText: "Cancel",
+      confirmText: "Delete",
+      destructive: true
+    });
+    if (deleteAccess) {
+      deleteProductMutation.mutate({ id: row._id });
+    }
+  }
+
+  const queryClient = useQueryClient();
+
+  const deleteProductMutation = useMutation({
+    mutationFn: deleteProduct,
+    onMutate: () => { showAppLoader(true) },
+    onSettled: () => { showAppLoader(false) },
+    onSuccess: () => {
+      navigate({
+        to: "/showcase/product",
+      })
+      toast.success("Product deleted Successfully !!!");
+      queryClient.invalidateQueries({
+        queryKey: [QueryKey.LIST_PRODUCT]
+      });
+      // setSelectedProductCategoryRow(null)
+    }
+  });
   return (
     <>
       <DropdownMenu modal={false}>
@@ -65,13 +104,10 @@ export function ProductTableRowActions({ row }: DataTableRowActionsProps) {
           <DropdownMenuSeparator />
           <DropdownMenuItem
             onClick={() => {
-              // setCurrentRow(row.original)
-              // setOpen('delete')
-              setSelectedProductCategoryRow(row.original)
-              openShowcaseDialog("delete");
-              // updateShowcaseState({
-              //   productCategoryDialog:"delete"
-              // })
+
+              // setSelectedProductCategoryRow(row.original)
+              // openShowcaseDialog("delete");
+              handleDeleteProduct(row.original);
             }}
             className='text-red-500!'
           >
