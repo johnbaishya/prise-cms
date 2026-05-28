@@ -44,6 +44,7 @@ import { Route as AuthenticatedErrorsErrorRouteImport } from './routes/_authenti
 import { Route as AuthenticatedShowcaseTagIndexRouteImport } from './routes/_authenticated/showcase/tag/index'
 import { Route as AuthenticatedShowcaseProductIndexRouteImport } from './routes/_authenticated/showcase/product/index'
 import { Route as AuthenticatedShowcaseCategoryIndexRouteImport } from './routes/_authenticated/showcase/category/index'
+import { Route as AuthenticatedShowcaseBannerIndexRouteImport } from './routes/_authenticated/showcase/banner/index'
 import { Route as AuthenticatedShowcaseProductViewRouteImport } from './routes/_authenticated/showcase/product/view'
 import { Route as AuthenticatedShowcaseProductEditRouteImport } from './routes/_authenticated/showcase/product/edit'
 import { Route as AuthenticatedShowcaseProductAddRouteImport } from './routes/_authenticated/showcase/product/add'
@@ -233,6 +234,12 @@ const AuthenticatedShowcaseCategoryIndexRoute =
     path: '/showcase/category/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedShowcaseBannerIndexRoute =
+  AuthenticatedShowcaseBannerIndexRouteImport.update({
+    id: '/showcase/banner/',
+    path: '/showcase/banner/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedShowcaseProductViewRoute =
   AuthenticatedShowcaseProductViewRouteImport.update({
     id: '/showcase/product/view',
@@ -285,6 +292,7 @@ export interface FileRoutesByFullPath {
   '/showcase/product/add': typeof AuthenticatedShowcaseProductAddRoute
   '/showcase/product/edit': typeof AuthenticatedShowcaseProductEditRoute
   '/showcase/product/view': typeof AuthenticatedShowcaseProductViewRoute
+  '/showcase/banner/': typeof AuthenticatedShowcaseBannerIndexRoute
   '/showcase/category/': typeof AuthenticatedShowcaseCategoryIndexRoute
   '/showcase/product/': typeof AuthenticatedShowcaseProductIndexRoute
   '/showcase/tag/': typeof AuthenticatedShowcaseTagIndexRoute
@@ -321,6 +329,7 @@ export interface FileRoutesByTo {
   '/showcase/product/add': typeof AuthenticatedShowcaseProductAddRoute
   '/showcase/product/edit': typeof AuthenticatedShowcaseProductEditRoute
   '/showcase/product/view': typeof AuthenticatedShowcaseProductViewRoute
+  '/showcase/banner': typeof AuthenticatedShowcaseBannerIndexRoute
   '/showcase/category': typeof AuthenticatedShowcaseCategoryIndexRoute
   '/showcase/product': typeof AuthenticatedShowcaseProductIndexRoute
   '/showcase/tag': typeof AuthenticatedShowcaseTagIndexRoute
@@ -362,6 +371,7 @@ export interface FileRoutesById {
   '/_authenticated/showcase/product/add': typeof AuthenticatedShowcaseProductAddRoute
   '/_authenticated/showcase/product/edit': typeof AuthenticatedShowcaseProductEditRoute
   '/_authenticated/showcase/product/view': typeof AuthenticatedShowcaseProductViewRoute
+  '/_authenticated/showcase/banner/': typeof AuthenticatedShowcaseBannerIndexRoute
   '/_authenticated/showcase/category/': typeof AuthenticatedShowcaseCategoryIndexRoute
   '/_authenticated/showcase/product/': typeof AuthenticatedShowcaseProductIndexRoute
   '/_authenticated/showcase/tag/': typeof AuthenticatedShowcaseTagIndexRoute
@@ -401,6 +411,7 @@ export interface FileRouteTypes {
     | '/showcase/product/add'
     | '/showcase/product/edit'
     | '/showcase/product/view'
+    | '/showcase/banner/'
     | '/showcase/category/'
     | '/showcase/product/'
     | '/showcase/tag/'
@@ -437,6 +448,7 @@ export interface FileRouteTypes {
     | '/showcase/product/add'
     | '/showcase/product/edit'
     | '/showcase/product/view'
+    | '/showcase/banner'
     | '/showcase/category'
     | '/showcase/product'
     | '/showcase/tag'
@@ -477,6 +489,7 @@ export interface FileRouteTypes {
     | '/_authenticated/showcase/product/add'
     | '/_authenticated/showcase/product/edit'
     | '/_authenticated/showcase/product/view'
+    | '/_authenticated/showcase/banner/'
     | '/_authenticated/showcase/category/'
     | '/_authenticated/showcase/product/'
     | '/_authenticated/showcase/tag/'
@@ -745,6 +758,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedShowcaseCategoryIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/showcase/banner/': {
+      id: '/_authenticated/showcase/banner/'
+      path: '/showcase/banner'
+      fullPath: '/showcase/banner/'
+      preLoaderRoute: typeof AuthenticatedShowcaseBannerIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/showcase/product/view': {
       id: '/_authenticated/showcase/product/view'
       path: '/showcase/product/view'
@@ -805,6 +825,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedShowcaseProductAddRoute: typeof AuthenticatedShowcaseProductAddRoute
   AuthenticatedShowcaseProductEditRoute: typeof AuthenticatedShowcaseProductEditRoute
   AuthenticatedShowcaseProductViewRoute: typeof AuthenticatedShowcaseProductViewRoute
+  AuthenticatedShowcaseBannerIndexRoute: typeof AuthenticatedShowcaseBannerIndexRoute
   AuthenticatedShowcaseCategoryIndexRoute: typeof AuthenticatedShowcaseCategoryIndexRoute
   AuthenticatedShowcaseProductIndexRoute: typeof AuthenticatedShowcaseProductIndexRoute
   AuthenticatedShowcaseTagIndexRoute: typeof AuthenticatedShowcaseTagIndexRoute
@@ -823,6 +844,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedShowcaseProductAddRoute: AuthenticatedShowcaseProductAddRoute,
   AuthenticatedShowcaseProductEditRoute: AuthenticatedShowcaseProductEditRoute,
   AuthenticatedShowcaseProductViewRoute: AuthenticatedShowcaseProductViewRoute,
+  AuthenticatedShowcaseBannerIndexRoute: AuthenticatedShowcaseBannerIndexRoute,
   AuthenticatedShowcaseCategoryIndexRoute:
     AuthenticatedShowcaseCategoryIndexRoute,
   AuthenticatedShowcaseProductIndexRoute:

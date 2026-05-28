@@ -72,6 +72,11 @@ export const sidebarData: SidebarData = {
           url:"/showcase/product",
           icon:Package,
         },
+        {
+          title:"Banner",
+          url:"/showcase/banner",
+          icon:Package,
+        },
         //  {
         //   title:"Add Product",
         //   url:"/showcase/product/add",

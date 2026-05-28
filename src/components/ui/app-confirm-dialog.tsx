@@ -14,11 +14,11 @@ import { useConfirmStore } from '@/stores/confirm-store'
 
 
 export function AppConfirmDialog() {
-    const { open, options, resolve } = useConfirmStore()
+  const { open, options, resolve } = useConfirmStore()
 
-    if (!open) return null
+  if (!open) return null
   return (
-    <AlertDialog open = {open}>
+    <AlertDialog open={open}>
       <AlertDialogContent>
         <AlertDialogHeader className='text-start'>
           <AlertDialogTitle>{options?.title}</AlertDialogTitle>
@@ -27,16 +27,28 @@ export function AppConfirmDialog() {
           </AlertDialogDescription>
         </AlertDialogHeader>
         {/* {children} */}
+
         <AlertDialogFooter>
-          <AlertDialogCancel onClick={()=>{resolve(false)}}>
-            {options?.cancelText ?? 'Cancel'}
-          </AlertDialogCancel>
-          <Button
-            onClick={()=>(resolve(true))}
-            variant={options?.destructive ? 'destructive' : 'default'}
-          >
-            {options?.confirmText ?? 'Confirm'}
-          </Button>
+          {
+            options.singleOption ?
+              <Button
+                onClick={() => (resolve(true))}
+                variant="outline"
+              >
+                OK
+              </Button>
+              :
+              <>
+                <AlertDialogCancel onClick={() => { resolve(false) }}>
+                  {options?.cancelText ?? 'Cancel'}
+                </AlertDialogCancel>
+                <Button
+                  onClick={() => (resolve(true))}
+                  variant={options?.destructive ? 'destructive' : 'default'}
+                >
+                  {options?.confirmText ?? 'Confirm'}
+                </Button>
+              </>}
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

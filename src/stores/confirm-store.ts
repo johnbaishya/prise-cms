@@ -6,6 +6,7 @@ export type ConfirmOptions = {
   confirmText?: string
   cancelText?: string
   destructive?:boolean
+  singleOption?:boolean
 }
 
 type ConfirmState = {

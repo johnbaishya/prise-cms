@@ -20,7 +20,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { getAllProductCategoryList } from '@/api/showcase/product-category.service'
 import { getAllProductTagList } from '@/api/showcase/product-tag.service'
 import { getReactSelectLoadOptions, mapDataToSelectOption } from '@/lib/react-select-option-handler'
-import { addProductGallery, createProduct, getProductGallery, updateProduct } from '@/api/showcase/product.service'
+import { addProductGallery, createProduct, deleteProduct, getProductGallery, updateProduct } from '@/api/showcase/product.service'
 import { toast } from 'sonner'
 import { type CreateProductDTO } from '@/Types/request/showcase-request'
 import { defaultAddProductForm } from './product.constants'
@@ -35,6 +35,8 @@ import { IGallery } from '@/Types/entities/core-entities'
 import { SelectedImagesDialog } from '@/components/selected-images-dialog'
 import { cn } from '@/lib/utils'
 import ThumbGallerySwiper from '@/components/thumbs-gallery-swiper'
+import { IProduct } from '@/Types/entities/showcase-entities'
+import { setSelectedProductRow } from '@/stores/actions/showcase-actions'
 
 
 const route = getRouteApi('/_authenticated/showcase/product/view')
@@ -63,6 +65,49 @@ export default function ViewProduct() {
     }
 
     const stockNumber = selectedProductRow?.stock ? Number(selectedProductRow?.stock) : 0;
+
+    const handlePurchase = async () => {
+        await showConfirmDialog({
+            title: "Contact Business",
+            description: "To purchase this item please contact with the business",
+            singleOption: true,
+        })
+    }
+
+    const handleDeleteProduct = async (row: IProduct | null) => {
+        if (!row) return;
+        const deleteAccess = await showConfirmDialog({
+            title: "Delete ?",
+            description: "Are you sure want to delete the product " + row.name,
+            cancelText: "Cancel",
+            confirmText: "Delete",
+            destructive: true,
+        });
+        if (deleteAccess) {
+            deleteProductMutation.mutate({ id: row._id });
+        }
+    }
+
+    const queryClient = useQueryClient();
+    const deleteProductMutation = useMutation({
+        mutationFn: deleteProduct,
+        onMutate: () => { showAppLoader(true) },
+        onSettled: () => { showAppLoader(false) },
+        onSuccess: () => {
+            navigate({
+                to: "/showcase/product",
+            })
+            toast.success("Product deleted Successfully !!!");
+            queryClient.invalidateQueries({
+                queryKey: [QueryKey.LIST_PRODUCT]
+            });
+            navigate({
+                to: "/showcase/product",
+            })
+            setSelectedProductRow(null);
+            // setSelectedProductCategoryRow(null)
+        }
+    });
 
     // const getStockText = (): string => {
     //     const stock = selectedProductRow?.stock;
@@ -131,16 +176,49 @@ export default function ViewProduct() {
                                                 Out Of Stock
                                             </p> :
                                             <p className='font-light mt-1'>
-                                                <span className='text-xl font-semibold'>{selectedProductRow.stock}</span> items left
+                                                <span className='text-xl font-semibold'>{selectedProductRow?.stock}</span> items left
                                             </p>
                                 }
                             </>
                         }
-                        <Button className='mt-3'>Purchase </Button>
+                        <Button className='mt-3' onClick={() => { handlePurchase() }}>Purchase </Button>
                     </div>
                     <p className='text-sm font-extralight border-t-1 pt-3 mt-3' >
                         {selectedProductRow?.description}
                     </p>
+                    <div className='grid grid-cols-3 gap-2'>
+                        <Button
+                            variant={"outline"}
+                            className='mt-3'
+                            onClick={() => {
+                                navigate({
+                                    to: "/showcase/product",
+                                })
+                            }}
+                        >
+                            View All Products
+                        </Button>
+                        <Button
+                            variant={"outline"}
+                            className='mt-3'
+                            onClick={() => {
+                                navigate({
+                                    to: "/showcase/product/edit",
+                                })
+                            }}
+                        >
+                            Edit Product
+                        </Button>
+                        <Button
+                            variant={"destructive"}
+                            className='mt-3'
+                            onClick={() => { handleDeleteProduct(selectedProductRow) }}
+                        >
+                            Delete Product
+                        </Button>
+
+                    </div>
+                    {/* grid grid-cols-1 md:grid-cols-1 lg:grid-cols-5 gap-3 product-detail-container */}
                 </div>
             </div>
         </div>

@@ -50,6 +50,8 @@ const ENDPOINTS = {
     deleteProduct: (productId: string): string => `/showcase/product/${productId}`,
     listProductGallery:(productId:string)=>`/showcase/product/${productId}/gallery`,
     addProductGallery:(productId:string)=>`/showcase/product/${productId}/gallery`,
+    addbannerImages:(companyId:string)=>`/showcase/company/${companyId}/banner`,
+    getbannerImages:(companyId:string)=>`/showcase/company/${companyId}/banner`,
   },
   core:{
     deleteGalleryimage:(galleryId:string)=>`/gallery/${galleryId}`

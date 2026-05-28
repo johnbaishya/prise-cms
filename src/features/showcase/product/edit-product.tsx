@@ -130,7 +130,7 @@ export default function EditProduct() {
     onMutate: () => { showAppLoader(true) },
     onSettled: () => { showAppLoader(false) },
     onSuccess: () => {
-      toast.success("Product added Successfully !!!");
+      toast.success("image deleted Successfully !!!");
       queryClient.invalidateQueries({
         queryKey: [QueryKey.LIST_PRODUCT_GALLERY, selectedProductRow?._id]
       })
