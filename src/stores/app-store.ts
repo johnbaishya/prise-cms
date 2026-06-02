@@ -1,8 +1,9 @@
+import { ICompany } from '@/Types/entities/core-entities'
 import { create } from 'zustand'
 
 
 export interface AppStateData {
-    selectedCompany:{_id:string,name:string}|null,
+    selectedCompany:ICompany|null,
     loader:boolean,
 }
 
@@ -12,10 +13,7 @@ export interface AppState extends AppStateData{
 }
 
 const initialState:AppStateData = {
-    selectedCompany:{
-        _id:"69fb3cb85167b287be9fdf51",
-        name:"snaptap"
-    },
+    selectedCompany:null,
     loader:false,
 }
 

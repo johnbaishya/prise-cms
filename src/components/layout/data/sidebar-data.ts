@@ -58,25 +58,38 @@ export const sidebarData: SidebarData = {
           icon: LayoutDashboard,
         },
         {
-          title:"Category",
-          url:"/showcase/category",
+          title:"Companies",
+          url:"/company",
           icon:Package,
         },
         {
-          title:"Tag",
-          url:"/showcase/tag",
+          title:"Showcase",
           icon:Package,
+          items:[
+            {
+              title:"Category",
+              url:"/showcase/category",
+              icon:Package,
+            },
+            {
+              title:"Tag",
+              url:"/showcase/tag",
+              icon:Package,
+            },
+            {
+              title:"Product",
+              url:"/showcase/product",
+              icon:Package,
+            },
+            {
+              title:"Banner",
+              url:"/showcase/banner",
+              icon:Package,
+            },
+          ]
         },
-        {
-          title:"Product",
-          url:"/showcase/product",
-          icon:Package,
-        },
-        {
-          title:"Banner",
-          url:"/showcase/banner",
-          icon:Package,
-        },
+        
+
         //  {
         //   title:"Add Product",
         //   url:"/showcase/product/add",

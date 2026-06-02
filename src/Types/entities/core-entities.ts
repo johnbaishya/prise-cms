@@ -1,3 +1,4 @@
+import { Currency } from "lucide-react"
 import { z } from "zod"
 
 export enum EntityType{
@@ -20,7 +21,22 @@ const gallerySchema = z.object({
     updatedAt: z.coerce.date()
 })
 
+
 export type IGallery = z.infer<typeof gallerySchema>
+
+
+const companySchema = z.object({
+    _id:z.string(),
+    name:z.string(),
+    description:z.string().optional(),
+    user_id:z.string(),
+    category:z.string(),
+    Currency:z.string().optional(),
+    brand_color:z.string().optional(),
+    brand_logo:z.string().optional(),
+})
+
+export type ICompany = z.infer<typeof companySchema>
 
 
 // export interface IGallery extends Document {

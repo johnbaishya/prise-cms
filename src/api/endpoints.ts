@@ -54,7 +54,8 @@ const ENDPOINTS = {
     getbannerImages:(companyId:string)=>`/showcase/company/${companyId}/banner`,
   },
   core:{
-    deleteGalleryimage:(galleryId:string)=>`/gallery/${galleryId}`
+    deleteGalleryimage:(galleryId:string)=>`/gallery/${galleryId}`,
+    listCompanies:'/company',
   }
 }
 

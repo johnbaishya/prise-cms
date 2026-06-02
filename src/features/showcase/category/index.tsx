@@ -20,17 +20,10 @@ export function Category() {
   const search = route.useSearch()
   const navigate = route.useNavigate()
 
-  
+
 
   return (
     <>
-      <Header fixed>
-        <Search className='me-auto' />
-        <ThemeSwitch />
-        <ConfigDrawer />
-        <ProfileDropdown />
-      </Header>
-
       <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
         <div className='flex flex-wrap items-end justify-between gap-2'>
           <div>
@@ -39,7 +32,7 @@ export function Category() {
               Manage your Categories and their details here.
             </p>
           </div>
-          <CategoryPrimaryButtons/>
+          <CategoryPrimaryButtons />
         </div>
         <CategoryTable navigate={navigate} />
       </Main>

@@ -135,7 +135,7 @@ export const Banner = () => {
                 <CardFooter>
                     <div className='flex justify-center pt-4 w-full'>
                         <label for="file-upload" class="custom-file-upload" className={cn(buttonVariants({ variant: "outline", size: "default" }))} >
-                            Add More Images
+                            Add More Images +
                             {/* <Button variant={"outline"} >Add More Images..</Button> */}
                         </label>
                         <Input

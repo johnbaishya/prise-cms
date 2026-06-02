@@ -17,17 +17,10 @@ export function Product() {
   const search = route.useSearch()
   const navigate = route.useNavigate()
 
-  
+
 
   return (
     <>
-      <Header fixed>
-        <Search className='me-auto' />
-        <ThemeSwitch />
-        <ConfigDrawer />
-        <ProfileDropdown />
-      </Header>
-
       <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
         <div className='flex flex-wrap items-end justify-between gap-2'>
           <div>
@@ -36,7 +29,7 @@ export function Product() {
               Manage your Product and their details here.
             </p>
           </div>
-          <ProductPrimaryButtons navigate = {navigate}/>
+          <ProductPrimaryButtons navigate={navigate} />
         </div>
         <ProductTable navigate={navigate} />
       </Main>

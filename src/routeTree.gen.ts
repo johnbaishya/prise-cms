@@ -26,11 +26,14 @@ import { Route as authOtpRouteImport } from './routes/(auth)/otp'
 import { Route as authForgotPasswordRouteImport } from './routes/(auth)/forgot-password'
 import { Route as ClerkAuthenticatedRouteRouteImport } from './routes/clerk/_authenticated/route'
 import { Route as ClerkauthRouteRouteImport } from './routes/clerk/(auth)/route'
+import { Route as AuthenticatedShowcaseRouteRouteImport } from './routes/_authenticated/showcase/route'
 import { Route as AuthenticatedSettingsRouteRouteImport } from './routes/_authenticated/settings/route'
 import { Route as AuthenticatedUsersIndexRouteImport } from './routes/_authenticated/users/index'
 import { Route as AuthenticatedTasksIndexRouteImport } from './routes/_authenticated/tasks/index'
+import { Route as AuthenticatedShowcaseIndexRouteImport } from './routes/_authenticated/showcase/index'
 import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
 import { Route as AuthenticatedHelpCenterIndexRouteImport } from './routes/_authenticated/help-center/index'
+import { Route as AuthenticatedCompanyIndexRouteImport } from './routes/_authenticated/company/index'
 import { Route as AuthenticatedChatsIndexRouteImport } from './routes/_authenticated/chats/index'
 import { Route as AuthenticatedAppsIndexRouteImport } from './routes/_authenticated/apps/index'
 import { Route as ClerkAuthenticatedUserManagementRouteImport } from './routes/clerk/_authenticated/user-management'
@@ -132,6 +135,12 @@ const ClerkauthRouteRoute = ClerkauthRouteRouteImport.update({
   id: '/(auth)',
   getParentRoute: () => ClerkRouteRoute,
 } as any)
+const AuthenticatedShowcaseRouteRoute =
+  AuthenticatedShowcaseRouteRouteImport.update({
+    id: '/showcase',
+    path: '/showcase',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedSettingsRouteRoute =
   AuthenticatedSettingsRouteRouteImport.update({
     id: '/settings',
@@ -148,6 +157,12 @@ const AuthenticatedTasksIndexRoute = AuthenticatedTasksIndexRouteImport.update({
   path: '/tasks/',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedShowcaseIndexRoute =
+  AuthenticatedShowcaseIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedShowcaseRouteRoute,
+  } as any)
 const AuthenticatedSettingsIndexRoute =
   AuthenticatedSettingsIndexRouteImport.update({
     id: '/',
@@ -158,6 +173,12 @@ const AuthenticatedHelpCenterIndexRoute =
   AuthenticatedHelpCenterIndexRouteImport.update({
     id: '/help-center/',
     path: '/help-center/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedCompanyIndexRoute =
+  AuthenticatedCompanyIndexRouteImport.update({
+    id: '/company/',
+    path: '/company/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedChatsIndexRoute = AuthenticatedChatsIndexRouteImport.update({
@@ -218,45 +239,45 @@ const AuthenticatedErrorsErrorRoute =
   } as any)
 const AuthenticatedShowcaseTagIndexRoute =
   AuthenticatedShowcaseTagIndexRouteImport.update({
-    id: '/showcase/tag/',
-    path: '/showcase/tag/',
-    getParentRoute: () => AuthenticatedRouteRoute,
+    id: '/tag/',
+    path: '/tag/',
+    getParentRoute: () => AuthenticatedShowcaseRouteRoute,
   } as any)
 const AuthenticatedShowcaseProductIndexRoute =
   AuthenticatedShowcaseProductIndexRouteImport.update({
-    id: '/showcase/product/',
-    path: '/showcase/product/',
-    getParentRoute: () => AuthenticatedRouteRoute,
+    id: '/product/',
+    path: '/product/',
+    getParentRoute: () => AuthenticatedShowcaseRouteRoute,
   } as any)
 const AuthenticatedShowcaseCategoryIndexRoute =
   AuthenticatedShowcaseCategoryIndexRouteImport.update({
-    id: '/showcase/category/',
-    path: '/showcase/category/',
-    getParentRoute: () => AuthenticatedRouteRoute,
+    id: '/category/',
+    path: '/category/',
+    getParentRoute: () => AuthenticatedShowcaseRouteRoute,
   } as any)
 const AuthenticatedShowcaseBannerIndexRoute =
   AuthenticatedShowcaseBannerIndexRouteImport.update({
-    id: '/showcase/banner/',
-    path: '/showcase/banner/',
-    getParentRoute: () => AuthenticatedRouteRoute,
+    id: '/banner/',
+    path: '/banner/',
+    getParentRoute: () => AuthenticatedShowcaseRouteRoute,
   } as any)
 const AuthenticatedShowcaseProductViewRoute =
   AuthenticatedShowcaseProductViewRouteImport.update({
-    id: '/showcase/product/view',
-    path: '/showcase/product/view',
-    getParentRoute: () => AuthenticatedRouteRoute,
+    id: '/product/view',
+    path: '/product/view',
+    getParentRoute: () => AuthenticatedShowcaseRouteRoute,
   } as any)
 const AuthenticatedShowcaseProductEditRoute =
   AuthenticatedShowcaseProductEditRouteImport.update({
-    id: '/showcase/product/edit',
-    path: '/showcase/product/edit',
-    getParentRoute: () => AuthenticatedRouteRoute,
+    id: '/product/edit',
+    path: '/product/edit',
+    getParentRoute: () => AuthenticatedShowcaseRouteRoute,
   } as any)
 const AuthenticatedShowcaseProductAddRoute =
   AuthenticatedShowcaseProductAddRouteImport.update({
-    id: '/showcase/product/add',
-    path: '/showcase/product/add',
-    getParentRoute: () => AuthenticatedRouteRoute,
+    id: '/product/add',
+    path: '/product/add',
+    getParentRoute: () => AuthenticatedShowcaseRouteRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
@@ -264,6 +285,7 @@ export interface FileRoutesByFullPath {
   '/clerk': typeof ClerkAuthenticatedRouteRouteWithChildren
   '/test': typeof TestRoute
   '/settings': typeof AuthenticatedSettingsRouteRouteWithChildren
+  '/showcase': typeof AuthenticatedShowcaseRouteRouteWithChildren
   '/forgot-password': typeof authForgotPasswordRoute
   '/otp': typeof authOtpRoute
   '/sign-in': typeof authSignInRoute
@@ -285,8 +307,10 @@ export interface FileRoutesByFullPath {
   '/clerk/user-management': typeof ClerkAuthenticatedUserManagementRoute
   '/apps/': typeof AuthenticatedAppsIndexRoute
   '/chats/': typeof AuthenticatedChatsIndexRoute
+  '/company/': typeof AuthenticatedCompanyIndexRoute
   '/help-center/': typeof AuthenticatedHelpCenterIndexRoute
   '/settings/': typeof AuthenticatedSettingsIndexRoute
+  '/showcase/': typeof AuthenticatedShowcaseIndexRoute
   '/tasks/': typeof AuthenticatedTasksIndexRoute
   '/users/': typeof AuthenticatedUsersIndexRoute
   '/showcase/product/add': typeof AuthenticatedShowcaseProductAddRoute
@@ -322,8 +346,10 @@ export interface FileRoutesByTo {
   '/clerk/user-management': typeof ClerkAuthenticatedUserManagementRoute
   '/apps': typeof AuthenticatedAppsIndexRoute
   '/chats': typeof AuthenticatedChatsIndexRoute
+  '/company': typeof AuthenticatedCompanyIndexRoute
   '/help-center': typeof AuthenticatedHelpCenterIndexRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
+  '/showcase': typeof AuthenticatedShowcaseIndexRoute
   '/tasks': typeof AuthenticatedTasksIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
   '/showcase/product/add': typeof AuthenticatedShowcaseProductAddRoute
@@ -340,6 +366,7 @@ export interface FileRoutesById {
   '/clerk': typeof ClerkRouteRouteWithChildren
   '/test': typeof TestRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRouteRouteWithChildren
+  '/_authenticated/showcase': typeof AuthenticatedShowcaseRouteRouteWithChildren
   '/clerk/(auth)': typeof ClerkauthRouteRouteWithChildren
   '/clerk/_authenticated': typeof ClerkAuthenticatedRouteRouteWithChildren
   '/(auth)/forgot-password': typeof authForgotPasswordRoute
@@ -364,8 +391,10 @@ export interface FileRoutesById {
   '/clerk/_authenticated/user-management': typeof ClerkAuthenticatedUserManagementRoute
   '/_authenticated/apps/': typeof AuthenticatedAppsIndexRoute
   '/_authenticated/chats/': typeof AuthenticatedChatsIndexRoute
+  '/_authenticated/company/': typeof AuthenticatedCompanyIndexRoute
   '/_authenticated/help-center/': typeof AuthenticatedHelpCenterIndexRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
+  '/_authenticated/showcase/': typeof AuthenticatedShowcaseIndexRoute
   '/_authenticated/tasks/': typeof AuthenticatedTasksIndexRoute
   '/_authenticated/users/': typeof AuthenticatedUsersIndexRoute
   '/_authenticated/showcase/product/add': typeof AuthenticatedShowcaseProductAddRoute
@@ -383,6 +412,7 @@ export interface FileRouteTypes {
     | '/clerk'
     | '/test'
     | '/settings'
+    | '/showcase'
     | '/forgot-password'
     | '/otp'
     | '/sign-in'
@@ -404,8 +434,10 @@ export interface FileRouteTypes {
     | '/clerk/user-management'
     | '/apps/'
     | '/chats/'
+    | '/company/'
     | '/help-center/'
     | '/settings/'
+    | '/showcase/'
     | '/tasks/'
     | '/users/'
     | '/showcase/product/add'
@@ -441,8 +473,10 @@ export interface FileRouteTypes {
     | '/clerk/user-management'
     | '/apps'
     | '/chats'
+    | '/company'
     | '/help-center'
     | '/settings'
+    | '/showcase'
     | '/tasks'
     | '/users'
     | '/showcase/product/add'
@@ -458,6 +492,7 @@ export interface FileRouteTypes {
     | '/clerk'
     | '/test'
     | '/_authenticated/settings'
+    | '/_authenticated/showcase'
     | '/clerk/(auth)'
     | '/clerk/_authenticated'
     | '/(auth)/forgot-password'
@@ -482,8 +517,10 @@ export interface FileRouteTypes {
     | '/clerk/_authenticated/user-management'
     | '/_authenticated/apps/'
     | '/_authenticated/chats/'
+    | '/_authenticated/company/'
     | '/_authenticated/help-center/'
     | '/_authenticated/settings/'
+    | '/_authenticated/showcase/'
     | '/_authenticated/tasks/'
     | '/_authenticated/users/'
     | '/_authenticated/showcase/product/add'
@@ -632,6 +669,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ClerkauthRouteRouteImport
       parentRoute: typeof ClerkRouteRoute
     }
+    '/_authenticated/showcase': {
+      id: '/_authenticated/showcase'
+      path: '/showcase'
+      fullPath: '/showcase'
+      preLoaderRoute: typeof AuthenticatedShowcaseRouteRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/settings': {
       id: '/_authenticated/settings'
       path: '/settings'
@@ -653,6 +697,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTasksIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/showcase/': {
+      id: '/_authenticated/showcase/'
+      path: '/'
+      fullPath: '/showcase/'
+      preLoaderRoute: typeof AuthenticatedShowcaseIndexRouteImport
+      parentRoute: typeof AuthenticatedShowcaseRouteRoute
+    }
     '/_authenticated/settings/': {
       id: '/_authenticated/settings/'
       path: '/'
@@ -665,6 +716,13 @@ declare module '@tanstack/react-router' {
       path: '/help-center'
       fullPath: '/help-center/'
       preLoaderRoute: typeof AuthenticatedHelpCenterIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/company/': {
+      id: '/_authenticated/company/'
+      path: '/company'
+      fullPath: '/company/'
+      preLoaderRoute: typeof AuthenticatedCompanyIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/chats/': {
@@ -739,52 +797,52 @@ declare module '@tanstack/react-router' {
     }
     '/_authenticated/showcase/tag/': {
       id: '/_authenticated/showcase/tag/'
-      path: '/showcase/tag'
+      path: '/tag'
       fullPath: '/showcase/tag/'
       preLoaderRoute: typeof AuthenticatedShowcaseTagIndexRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      parentRoute: typeof AuthenticatedShowcaseRouteRoute
     }
     '/_authenticated/showcase/product/': {
       id: '/_authenticated/showcase/product/'
-      path: '/showcase/product'
+      path: '/product'
       fullPath: '/showcase/product/'
       preLoaderRoute: typeof AuthenticatedShowcaseProductIndexRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      parentRoute: typeof AuthenticatedShowcaseRouteRoute
     }
     '/_authenticated/showcase/category/': {
       id: '/_authenticated/showcase/category/'
-      path: '/showcase/category'
+      path: '/category'
       fullPath: '/showcase/category/'
       preLoaderRoute: typeof AuthenticatedShowcaseCategoryIndexRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      parentRoute: typeof AuthenticatedShowcaseRouteRoute
     }
     '/_authenticated/showcase/banner/': {
       id: '/_authenticated/showcase/banner/'
-      path: '/showcase/banner'
+      path: '/banner'
       fullPath: '/showcase/banner/'
       preLoaderRoute: typeof AuthenticatedShowcaseBannerIndexRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      parentRoute: typeof AuthenticatedShowcaseRouteRoute
     }
     '/_authenticated/showcase/product/view': {
       id: '/_authenticated/showcase/product/view'
-      path: '/showcase/product/view'
+      path: '/product/view'
       fullPath: '/showcase/product/view'
       preLoaderRoute: typeof AuthenticatedShowcaseProductViewRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      parentRoute: typeof AuthenticatedShowcaseRouteRoute
     }
     '/_authenticated/showcase/product/edit': {
       id: '/_authenticated/showcase/product/edit'
-      path: '/showcase/product/edit'
+      path: '/product/edit'
       fullPath: '/showcase/product/edit'
       preLoaderRoute: typeof AuthenticatedShowcaseProductEditRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      parentRoute: typeof AuthenticatedShowcaseRouteRoute
     }
     '/_authenticated/showcase/product/add': {
       id: '/_authenticated/showcase/product/add'
-      path: '/showcase/product/add'
+      path: '/product/add'
       fullPath: '/showcase/product/add'
       preLoaderRoute: typeof AuthenticatedShowcaseProductAddRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      parentRoute: typeof AuthenticatedShowcaseRouteRoute
     }
   }
 }
@@ -812,16 +870,8 @@ const AuthenticatedSettingsRouteRouteWithChildren =
     AuthenticatedSettingsRouteRouteChildren,
   )
 
-interface AuthenticatedRouteRouteChildren {
-  AuthenticatedSettingsRouteRoute: typeof AuthenticatedSettingsRouteRouteWithChildren
-  AuthenticatedAuthenticatedTestRoute: typeof AuthenticatedAuthenticatedTestRoute
-  AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
-  AuthenticatedErrorsErrorRoute: typeof AuthenticatedErrorsErrorRoute
-  AuthenticatedAppsIndexRoute: typeof AuthenticatedAppsIndexRoute
-  AuthenticatedChatsIndexRoute: typeof AuthenticatedChatsIndexRoute
-  AuthenticatedHelpCenterIndexRoute: typeof AuthenticatedHelpCenterIndexRoute
-  AuthenticatedTasksIndexRoute: typeof AuthenticatedTasksIndexRoute
-  AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
+interface AuthenticatedShowcaseRouteRouteChildren {
+  AuthenticatedShowcaseIndexRoute: typeof AuthenticatedShowcaseIndexRoute
   AuthenticatedShowcaseProductAddRoute: typeof AuthenticatedShowcaseProductAddRoute
   AuthenticatedShowcaseProductEditRoute: typeof AuthenticatedShowcaseProductEditRoute
   AuthenticatedShowcaseProductViewRoute: typeof AuthenticatedShowcaseProductViewRoute
@@ -831,25 +881,54 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedShowcaseTagIndexRoute: typeof AuthenticatedShowcaseTagIndexRoute
 }
 
+const AuthenticatedShowcaseRouteRouteChildren: AuthenticatedShowcaseRouteRouteChildren =
+  {
+    AuthenticatedShowcaseIndexRoute: AuthenticatedShowcaseIndexRoute,
+    AuthenticatedShowcaseProductAddRoute: AuthenticatedShowcaseProductAddRoute,
+    AuthenticatedShowcaseProductEditRoute:
+      AuthenticatedShowcaseProductEditRoute,
+    AuthenticatedShowcaseProductViewRoute:
+      AuthenticatedShowcaseProductViewRoute,
+    AuthenticatedShowcaseBannerIndexRoute:
+      AuthenticatedShowcaseBannerIndexRoute,
+    AuthenticatedShowcaseCategoryIndexRoute:
+      AuthenticatedShowcaseCategoryIndexRoute,
+    AuthenticatedShowcaseProductIndexRoute:
+      AuthenticatedShowcaseProductIndexRoute,
+    AuthenticatedShowcaseTagIndexRoute: AuthenticatedShowcaseTagIndexRoute,
+  }
+
+const AuthenticatedShowcaseRouteRouteWithChildren =
+  AuthenticatedShowcaseRouteRoute._addFileChildren(
+    AuthenticatedShowcaseRouteRouteChildren,
+  )
+
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedSettingsRouteRoute: typeof AuthenticatedSettingsRouteRouteWithChildren
+  AuthenticatedShowcaseRouteRoute: typeof AuthenticatedShowcaseRouteRouteWithChildren
+  AuthenticatedAuthenticatedTestRoute: typeof AuthenticatedAuthenticatedTestRoute
+  AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
+  AuthenticatedErrorsErrorRoute: typeof AuthenticatedErrorsErrorRoute
+  AuthenticatedAppsIndexRoute: typeof AuthenticatedAppsIndexRoute
+  AuthenticatedChatsIndexRoute: typeof AuthenticatedChatsIndexRoute
+  AuthenticatedCompanyIndexRoute: typeof AuthenticatedCompanyIndexRoute
+  AuthenticatedHelpCenterIndexRoute: typeof AuthenticatedHelpCenterIndexRoute
+  AuthenticatedTasksIndexRoute: typeof AuthenticatedTasksIndexRoute
+  AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
+}
+
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSettingsRouteRoute: AuthenticatedSettingsRouteRouteWithChildren,
+  AuthenticatedShowcaseRouteRoute: AuthenticatedShowcaseRouteRouteWithChildren,
   AuthenticatedAuthenticatedTestRoute: AuthenticatedAuthenticatedTestRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedErrorsErrorRoute: AuthenticatedErrorsErrorRoute,
   AuthenticatedAppsIndexRoute: AuthenticatedAppsIndexRoute,
   AuthenticatedChatsIndexRoute: AuthenticatedChatsIndexRoute,
+  AuthenticatedCompanyIndexRoute: AuthenticatedCompanyIndexRoute,
   AuthenticatedHelpCenterIndexRoute: AuthenticatedHelpCenterIndexRoute,
   AuthenticatedTasksIndexRoute: AuthenticatedTasksIndexRoute,
   AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
-  AuthenticatedShowcaseProductAddRoute: AuthenticatedShowcaseProductAddRoute,
-  AuthenticatedShowcaseProductEditRoute: AuthenticatedShowcaseProductEditRoute,
-  AuthenticatedShowcaseProductViewRoute: AuthenticatedShowcaseProductViewRoute,
-  AuthenticatedShowcaseBannerIndexRoute: AuthenticatedShowcaseBannerIndexRoute,
-  AuthenticatedShowcaseCategoryIndexRoute:
-    AuthenticatedShowcaseCategoryIndexRoute,
-  AuthenticatedShowcaseProductIndexRoute:
-    AuthenticatedShowcaseProductIndexRoute,
-  AuthenticatedShowcaseTagIndexRoute: AuthenticatedShowcaseTagIndexRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =

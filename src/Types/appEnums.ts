@@ -12,4 +12,5 @@ export enum QueryKey {
   LIST_PRODUCT = "list-product",
   LIST_PRODUCT_GALLERY = 'list-product-gallery,',
   LIST_SHOWCASE_BANNER_IMAGES = 'list-showcase-banner-images',
+  LIST_COMPANIES = 'list-companies',
 }

@@ -36,6 +36,7 @@ export const ImageThumbnail = (props: ImageThumbnailProps) => {
         </Button>
       )}
       <img
+        className='w-full'
         src={src ? src : data?.location ? data.location : 'https://picsum.photos/200'}
         style={{ aspectRatio: '1/1', ...props.imageStyle }}
       />

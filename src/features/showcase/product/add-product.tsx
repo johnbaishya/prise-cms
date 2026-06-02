@@ -26,6 +26,11 @@ import { type CreateProductDTO } from '@/Types/request/showcase-request'
 import { defaultAddProductForm } from './product.constants'
 import { type AddProductForm, addProductformSchema } from './product.types'
 import { getRouteApi } from '@tanstack/react-router'
+import { Header } from '@/components/layout/header'
+import { ThemeSwitch } from '@/components/theme-switch'
+import { ConfigDrawer } from '@/components/config-drawer'
+import { ProfileDropdown } from '@/components/profile-dropdown'
+import { Search } from '@/components/search'
 
 
 const route = getRouteApi('/_authenticated/showcase/product/add')
@@ -121,150 +126,152 @@ export default function AddProduct() {
 
 
   return (
-    <div className='mx-auto w-full max-w-2xl px-4 py-6'>
-      {/* Header */}
-      <div className='mb-6'>
-        <h1 className='text-2xl font-semibold'>Add New Product</h1>
-        <p className='text-sm text-muted-foreground'>
-          Create new Product here.
-        </p>
-      </div>
+    <>
+      <div className='mx-auto w-full max-w-2xl px-4 py-6'>
 
-      {/* Form Card */}
-      <div className='rounded-lg border bg-card p-4 shadow-sm md:p-6'>
-        <Form {...form}>
-          <form
-            id='category-form'
-            onSubmit={form.handleSubmit(onSubmit)}
-            className='space-y-6'
-          >
-            {/* Name */}
-            <FormField
-              control={form.control}
-              name='name'
-              render={({ field }) => (
-                <FormItem className='grid grid-cols-1 gap-2 md:grid-cols-6 md:items-center'>
-                  <FormLabel className='md:col-span-2 md:text-right'>
-                    Name
-                  </FormLabel>
-                  <div className='md:col-span-4'>
-                    <FormControl>
-                      <Input
-                        placeholder='Product Name'
-                        autoComplete='off'
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </div>
-                </FormItem>
-              )}
-            />
+        {/* Header */}
+        <div className='mb-6'>
+          <h1 className='text-2xl font-semibold'>Add New Product</h1>
+          <p className='text-sm text-muted-foreground'>
+            Create new Product here.
+          </p>
+        </div>
 
-            {/* Slug */}
-            <FormField
-              control={form.control}
-              name='slug'
-              render={({ field }) => (
-                <FormItem className='grid grid-cols-1 gap-2 md:grid-cols-6 md:items-center'>
-                  <FormLabel className='md:col-span-2 md:text-right'>
-                    Slug
-                  </FormLabel>
-                  <div className='md:col-span-4'>
-                    <FormControl>
-                      <Input
-                        placeholder='Product Slug'
-                        autoComplete='off'
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </div>
-                </FormItem>
-              )}
-            />
-            {/* Description */}
-            <FormField
-              control={form.control}
-              name='description'
-              render={({ field }) => (
-                <FormItem className='grid grid-cols-1 gap-2 md:grid-cols-6 md:items-start'>
-                  <FormLabel className='md:col-span-2 md:text-right'>
-                    Description
-                  </FormLabel>
+        {/* Form Card */}
+        <div className='rounded-lg border bg-card p-4 shadow-sm md:p-6'>
+          <Form {...form}>
+            <form
+              id='category-form'
+              onSubmit={form.handleSubmit(onSubmit)}
+              className='space-y-6'
+            >
+              {/* Name */}
+              <FormField
+                control={form.control}
+                name='name'
+                render={({ field }) => (
+                  <FormItem className='grid grid-cols-1 gap-2 md:grid-cols-6 md:items-center'>
+                    <FormLabel className='md:col-span-2 md:text-right'>
+                      Name
+                    </FormLabel>
+                    <div className='md:col-span-4'>
+                      <FormControl>
+                        <Input
+                          placeholder='Product Name'
+                          autoComplete='off'
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </div>
+                  </FormItem>
+                )}
+              />
 
-                  <div className='md:col-span-4'>
-                    <FormControl>
-                      <Textarea
-                        placeholder='Type the description of the category'
-                        rows={3}
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </div>
-                </FormItem>
-              )}
-            />
-            {/* Price */}
-            <FormField
-              control={form.control}
-              name='price'
-              render={({ field }) => (
-                <FormItem className='grid grid-cols-1 gap-2 md:grid-cols-6 md:items-center'>
-                  <FormLabel className='md:col-span-2 md:text-right'>
-                    Price
-                  </FormLabel>
-                  <div className='md:col-span-4'>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        type='number'
-                        placeholder='Latest Price of the product'
-                        autoComplete='off'
-                        onChange={(event) => field.onChange(Number(event.target.value))}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </div>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name='originalPrice'
-              render={({ field }) => (
-                <FormItem className='grid grid-cols-1 gap-2 md:grid-cols-6 md:items-center'>
-                  <FormLabel className='md:col-span-2 md:text-right'>
-                    Original Price
-                  </FormLabel>
-                  <div className='md:col-span-4'>
-                    <FormControl>
-                      <Input
-                        type='number'
-                        placeholder='Previous price of the product'
-                        autoComplete='off'
-                        {...field}
-                        onChange={(event) => field.onChange(Number(event.target.value))}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </div>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name='productCategoryId'
-              render={({ field }) => (
-                <FormItem className='grid grid-cols-1 gap-2 md:grid-cols-6 md:items-center'>
-                  <FormLabel className='md:col-span-2 md:text-right'>
-                    Category
-                  </FormLabel>
-                  <div className='md:col-span-4'>
-                    <FormControl>
-                      <AsyncSelect cacheOptions loadOptions={categoryLoadOptions} defaultOptions={defaultCategoryOptions} {...field} />
-                      {/* <Select
+              {/* Slug */}
+              <FormField
+                control={form.control}
+                name='slug'
+                render={({ field }) => (
+                  <FormItem className='grid grid-cols-1 gap-2 md:grid-cols-6 md:items-center'>
+                    <FormLabel className='md:col-span-2 md:text-right'>
+                      Slug
+                    </FormLabel>
+                    <div className='md:col-span-4'>
+                      <FormControl>
+                        <Input
+                          placeholder='Product Slug'
+                          autoComplete='off'
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </div>
+                  </FormItem>
+                )}
+              />
+              {/* Description */}
+              <FormField
+                control={form.control}
+                name='description'
+                render={({ field }) => (
+                  <FormItem className='grid grid-cols-1 gap-2 md:grid-cols-6 md:items-start'>
+                    <FormLabel className='md:col-span-2 md:text-right'>
+                      Description
+                    </FormLabel>
+
+                    <div className='md:col-span-4'>
+                      <FormControl>
+                        <Textarea
+                          placeholder='Type the description of the category'
+                          rows={3}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </div>
+                  </FormItem>
+                )}
+              />
+              {/* Price */}
+              <FormField
+                control={form.control}
+                name='price'
+                render={({ field }) => (
+                  <FormItem className='grid grid-cols-1 gap-2 md:grid-cols-6 md:items-center'>
+                    <FormLabel className='md:col-span-2 md:text-right'>
+                      Price
+                    </FormLabel>
+                    <div className='md:col-span-4'>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          type='number'
+                          placeholder='Latest Price of the product'
+                          autoComplete='off'
+                          onChange={(event) => field.onChange(Number(event.target.value))}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </div>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name='originalPrice'
+                render={({ field }) => (
+                  <FormItem className='grid grid-cols-1 gap-2 md:grid-cols-6 md:items-center'>
+                    <FormLabel className='md:col-span-2 md:text-right'>
+                      Original Price
+                    </FormLabel>
+                    <div className='md:col-span-4'>
+                      <FormControl>
+                        <Input
+                          type='number'
+                          placeholder='Previous price of the product'
+                          autoComplete='off'
+                          {...field}
+                          onChange={(event) => field.onChange(Number(event.target.value))}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </div>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name='productCategoryId'
+                render={({ field }) => (
+                  <FormItem className='grid grid-cols-1 gap-2 md:grid-cols-6 md:items-center'>
+                    <FormLabel className='md:col-span-2 md:text-right'>
+                      Category
+                    </FormLabel>
+                    <div className='md:col-span-4'>
+                      <FormControl>
+                        <AsyncSelect cacheOptions loadOptions={categoryLoadOptions} defaultOptions={defaultCategoryOptions} {...field} />
+                        {/* <Select
                         placeholder='Select a category for product'
                         {...field}
                         options={
@@ -282,122 +289,122 @@ export default function AddProduct() {
 
                         options={categoryList}
                       /> */}
-                      {/* <Input
+                        {/* <Input
                         placeholder="Product Category"
                         autoComplete="off"
                         {...field}
                       /> */}
-                    </FormControl>
-                    <FormMessage />
-                  </div>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name='tags'
-              render={({ field }) => (
-                <FormItem className='grid grid-cols-1 gap-2 md:grid-cols-6 md:items-center'>
-                  <FormLabel className='md:col-span-2 md:text-right'>
-                    Tags
-                  </FormLabel>
-                  <div className='md:col-span-4'>
-                    <FormControl>
-                      <AsyncSelect
-                        isMulti
-                        cacheOptions
-                        loadOptions={tagLoadOptions}
-                        defaultOptions={defaultTagOptions}
-                        {...field}
-                      />
-                      {/* <Input
+                      </FormControl>
+                      <FormMessage />
+                    </div>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name='tags'
+                render={({ field }) => (
+                  <FormItem className='grid grid-cols-1 gap-2 md:grid-cols-6 md:items-center'>
+                    <FormLabel className='md:col-span-2 md:text-right'>
+                      Tags
+                    </FormLabel>
+                    <div className='md:col-span-4'>
+                      <FormControl>
+                        <AsyncSelect
+                          isMulti
+                          cacheOptions
+                          loadOptions={tagLoadOptions}
+                          defaultOptions={defaultTagOptions}
+                          {...field}
+                        />
+                        {/* <Input
                         placeholder="Product Category"
                         autoComplete="off"
                         {...field}
                       /> */}
-                    </FormControl>
-                    <FormMessage />
-                  </div>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name='stock'
-              render={({ field }) => (
-                <FormItem className='grid grid-cols-1 gap-2 md:grid-cols-6 md:items-center'>
-                  <FormLabel className='md:col-span-2 md:text-right'>
-                    Stock
-                  </FormLabel>
-                  <div className='md:col-span-4'>
-                    <FormControl>
-                      <Input
-                        type='number'
-                        placeholder='Number of available Stock of the Product'
-                        autoComplete='off'
-                        {...field}
-                        onChange={(event) => field.onChange(Number(event.target.value))}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </div>
-                </FormItem>
-              )}
-            />
-            {/* Image */}
-            <FormField
-              control={form.control}
-              name='images'
-              render={({ field }) => (
-                <FormItem className='grid grid-cols-1 gap-2 md:grid-cols-6 md:items-start'>
-                  <FormLabel className='md:col-span-2 md:text-right'>
-                    Images
-                  </FormLabel>
+                      </FormControl>
+                      <FormMessage />
+                    </div>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name='stock'
+                render={({ field }) => (
+                  <FormItem className='grid grid-cols-1 gap-2 md:grid-cols-6 md:items-center'>
+                    <FormLabel className='md:col-span-2 md:text-right'>
+                      Stock
+                    </FormLabel>
+                    <div className='md:col-span-4'>
+                      <FormControl>
+                        <Input
+                          type='number'
+                          placeholder='Number of available Stock of the Product'
+                          autoComplete='off'
+                          {...field}
+                          onChange={(event) => field.onChange(Number(event.target.value))}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </div>
+                  </FormItem>
+                )}
+              />
+              {/* Image */}
+              <FormField
+                control={form.control}
+                name='images'
+                render={({ field }) => (
+                  <FormItem className='grid grid-cols-1 gap-2 md:grid-cols-6 md:items-start'>
+                    <FormLabel className='md:col-span-2 md:text-right'>
+                      Images
+                    </FormLabel>
 
-                  <div className='space-y-3 md:col-span-4'>
-                    <FormControl>
-                      <Input
-                        multiple
-                        type='file'
-                        accept='image/*'
-                        name={field.name}
-                        ref={field.ref}
-                        onChange={(e) => {
-                          const files = e.target.files
-                          if (files) {
-                            field.onChange(Array.from(files))
-                          }
-                        }}
-                      />
-                    </FormControl>
+                    <div className='space-y-3 md:col-span-4'>
+                      <FormControl>
+                        <Input
+                          multiple
+                          type='file'
+                          accept='image/*'
+                          name={field.name}
+                          ref={field.ref}
+                          onChange={(e) => {
+                            const files = e.target.files
+                            if (files) {
+                              field.onChange(Array.from(files))
+                            }
+                          }}
+                        />
+                      </FormControl>
 
-                    {/* {previewImage && (
+                      {/* {previewImage && (
                       <img
                         src={previewImage}
                         className="h-40 w-full rounded-md object-cover border"
                       />
                     )} */}
 
-                    <FormMessage />
-                  </div>
-                </FormItem>
-              )}
-            />
+                      <FormMessage />
+                    </div>
+                  </FormItem>
+                )}
+              />
 
-            {previewImages.length > 0 && (
-              <div className='grid grid-cols-1 gap-2 md:grid-cols-6 md:items-start'>
-                {previewImages.map((item) => {
-                  return (
-                    <ImageThumbnail
-                      key={item}
-                      src={item}
-                      className='md:col-span-2 md:text-right'
-                    />
-                  )
-                })}
-              </div>
-            )}
-            {/* <div className='grid grid-cols-1 gap-2 md:grid-cols-6 md:items-start'>
+              {previewImages.length > 0 && (
+                <div className='grid grid-cols-1 gap-2 md:grid-cols-6 md:items-start'>
+                  {previewImages.map((item) => {
+                    return (
+                      <ImageThumbnail
+                        key={item}
+                        src={item}
+                        className='md:col-span-2 md:text-right'
+                      />
+                    )
+                  })}
+                </div>
+              )}
+              {/* <div className='grid grid-cols-1 gap-2 md:grid-cols-6 md:items-start'>
               <ImageThumbnail
                 src='https://picsum.photos/300/200'
                 className='md:col-span-2 md:text-right'
@@ -412,13 +419,14 @@ export default function AddProduct() {
               />
             </div> */}
 
-            {/* Actions */}
-            <div className='flex justify-end pt-4'>
-              <Button type='submit'>Create Product</Button>
-            </div>
-          </form>
-        </Form>
+              {/* Actions */}
+              <div className='flex justify-end pt-4'>
+                <Button type='submit'>Create Product</Button>
+              </div>
+            </form>
+          </Form>
+        </div>
       </div>
-    </div>
+    </>
   )
 }
