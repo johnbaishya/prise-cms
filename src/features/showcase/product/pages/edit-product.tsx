@@ -4,8 +4,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { QueryKey } from '@/Types/appEnums'
 import AsyncSelect from 'react-select/async'
-import { getSelectedCompanyId, showAppLoader } from '@/stores/actions/app-actions'
-import { Button } from '@/components/ui/button'
+import { getSelectedCompanyId, showAppLoader, showConfirmDialog } from '@/stores/actions/app-actions'
+import { Button, buttonVariants } from '@/components/ui/button'
 import {
   Form,
   FormControl,
@@ -20,29 +20,40 @@ import { Textarea } from '@/components/ui/textarea'
 import { getAllProductCategoryList } from '@/api/showcase/product-category.service'
 import { getAllProductTagList } from '@/api/showcase/product-tag.service'
 import { getReactSelectLoadOptions, mapDataToSelectOption } from '@/lib/react-select-option-handler'
-import { createProduct } from '@/api/showcase/product.service'
+import { addProductGallery, createProduct, getProductGallery, updateProduct } from '@/api/showcase/product.service'
 import { toast } from 'sonner'
 import { type CreateProductDTO } from '@/Types/request/showcase-request'
-import { defaultAddProductForm } from './product.constants'
-import { type AddProductForm, addProductformSchema } from './product.types'
+import { defaultAddProductForm } from '../product.constants'
+import { type AddProductForm, addProductformSchema, EditProductForm } from '../product.types'
 import { getRouteApi } from '@tanstack/react-router'
+import { useShowcaseStore } from '@/stores/showcase-store'
+import { mapProductToForm } from '../product.utils'
+import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
+import { deleteGalleryImage } from '@/api/core/gallery.service'
+import { Skeleton } from '@/components/ui/skeleton'
+import { IGallery } from '@/Types/entities/core-entities'
+import { SelectedImagesDialog } from '@/components/selected-images-dialog'
+import { cn } from '@/lib/utils'
 import { Header } from '@/components/layout/header'
+import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { ConfigDrawer } from '@/components/config-drawer'
 import { ProfileDropdown } from '@/components/profile-dropdown'
-import { Search } from '@/components/search'
 
 
 const route = getRouteApi('/_authenticated/showcase/product/add')
 
 
 
-export default function AddProduct() {
+export default function EditProduct() {
 
   const navigate = route.useNavigate()
-  const form = useForm<AddProductForm>({
+  const { selectedProductRow } = useShowcaseStore(state => state)
+  const [selectedImages, setSelectedImages] = useState<File[]>([]);
+
+  const form = useForm<EditProductForm>({
     resolver: zodResolver(addProductformSchema),
-    defaultValues: defaultAddProductForm()
+    defaultValues: selectedProductRow ? mapProductToForm(selectedProductRow) : defaultAddProductForm(),
   })
 
   const [previewImages, setPreviewImages] = useState<string[]>([])
@@ -73,6 +84,11 @@ export default function AddProduct() {
     queryFn: () => getAllProductTagList(getSelectedCompanyId()),
   })
 
+  const { data: galleryData, isLoading: galleryLoading } = useQuery({
+    queryKey: [QueryKey.LIST_PRODUCT_GALLERY, selectedProductRow?._id],
+    queryFn: () => getProductGallery({ id: selectedProductRow?._id })
+  })
+
 
   const categoryLoadOptions = getReactSelectLoadOptions(categoryList?.data || [])
   const defaultCategoryOptions = mapDataToSelectOption(categoryList?.data || [])
@@ -86,7 +102,7 @@ export default function AddProduct() {
     const productCategoryId = values.productCategoryId.value;
     const tags = values?.tags?.map(item => item.value);
     const data: CreateProductDTO = { ...values, companyId, productCategoryId, tags };
-    productAddMutation.mutate({ data })
+    editProductMutation.mutate({ data, productId: selectedProductRow?._id })
     // console.log("submit",values)
     // console.log(form);
   }
@@ -95,8 +111,8 @@ export default function AddProduct() {
   const queryClient = useQueryClient();
 
 
-  const productAddMutation = useMutation({
-    mutationFn: createProduct,
+  const editProductMutation = useMutation({
+    mutationFn: updateProduct,
     onMutate: () => { showAppLoader(true) },
     onSettled: () => { showAppLoader(false) },
     onSuccess: () => {
@@ -105,13 +121,63 @@ export default function AddProduct() {
       navigate({
         to: "/showcase/product",
       })
-      toast.success("Product added Successfully !!!");
+      toast.success("Product updated Successfully !!!");
       queryClient.invalidateQueries({
         queryKey: [QueryKey.LIST_PRODUCT]
       });
       // setSelectedProductCategoryRow(null)
     }
   });
+
+
+  const galleryDeleteMutation = useMutation({
+    mutationFn: deleteGalleryImage,
+    onMutate: () => { showAppLoader(true) },
+    onSettled: () => { showAppLoader(false) },
+    onSuccess: () => {
+      toast.success("image deleted Successfully !!!");
+      queryClient.invalidateQueries({
+        queryKey: [QueryKey.LIST_PRODUCT_GALLERY, selectedProductRow?._id]
+      })
+    }
+  })
+
+
+
+  const addProductGalleryMutation = useMutation({
+    mutationFn: addProductGallery,
+    onMutate: () => { showAppLoader(true) },
+    onSettled: () => { showAppLoader(false) },
+    onSuccess: (data) => {
+      console.log(data);
+      setSelectedImages([])
+      toast.success("Images added Successfully !!!");
+      queryClient.invalidateQueries({
+        queryKey: [QueryKey.LIST_PRODUCT_GALLERY, selectedProductRow?._id]
+      })
+    }
+  })
+
+
+
+
+  const handleDeleteImage = async (image: IGallery) => {
+
+    const access = await showConfirmDialog({
+      title: "Delete Image ?",
+      description: "Are you sure want to delete the image",
+      confirmText: "Delete",
+      cancelText: "Cancel",
+      destructive: true
+    });
+
+    if (!access) {
+      return;
+    }
+
+    console.log("start from here", image)
+    galleryDeleteMutation.mutate({ id: image._id });
+  }
 
 
 
@@ -128,12 +194,11 @@ export default function AddProduct() {
   return (
     <>
       <div className='mx-auto w-full max-w-2xl px-4 py-6'>
-
         {/* Header */}
         <div className='mb-6'>
-          <h1 className='text-2xl font-semibold'>Add New Product</h1>
+          <h1 className='text-2xl font-semibold'>Edit Product</h1>
           <p className='text-sm text-muted-foreground'>
-            Create new Product here.
+            Update Existing Product here.
           </p>
         </div>
 
@@ -352,80 +417,79 @@ export default function AddProduct() {
                 )}
               />
               {/* Image */}
-              <FormField
-                control={form.control}
-                name='images'
-                render={({ field }) => (
-                  <FormItem className='grid grid-cols-1 gap-2 md:grid-cols-6 md:items-start'>
-                    <FormLabel className='md:col-span-2 md:text-right'>
-                      Images
-                    </FormLabel>
-
-                    <div className='space-y-3 md:col-span-4'>
-                      <FormControl>
-                        <Input
-                          multiple
-                          type='file'
-                          accept='image/*'
-                          name={field.name}
-                          ref={field.ref}
-                          onChange={(e) => {
-                            const files = e.target.files
-                            if (files) {
-                              field.onChange(Array.from(files))
-                            }
-                          }}
-                        />
-                      </FormControl>
-
-                      {/* {previewImage && (
-                      <img
-                        src={previewImage}
-                        className="h-40 w-full rounded-md object-cover border"
-                      />
-                    )} */}
-
-                      <FormMessage />
-                    </div>
-                  </FormItem>
-                )}
-              />
-
-              {previewImages.length > 0 && (
-                <div className='grid grid-cols-1 gap-2 md:grid-cols-6 md:items-start'>
-                  {previewImages.map((item) => {
-                    return (
-                      <ImageThumbnail
-                        key={item}
-                        src={item}
-                        className='md:col-span-2 md:text-right'
-                      />
-                    )
-                  })}
-                </div>
-              )}
-              {/* <div className='grid grid-cols-1 gap-2 md:grid-cols-6 md:items-start'>
-              <ImageThumbnail
-                src='https://picsum.photos/300/200'
-                className='md:col-span-2 md:text-right'
-              />
-              <ImageThumbnail
-                src='https://picsum.photos/300'
-                className='md:col-span-2 md:text-right'
-              />
-              <ImageThumbnail
-                src='https://picsum.photos/300/200'
-                className='md:col-span-2 md:text-right'
-              />
-            </div> */}
 
               {/* Actions */}
               <div className='flex justify-end pt-4'>
-                <Button type='submit'>Create Product</Button>
+                <Button type='submit'>Update Product</Button>
               </div>
             </form>
           </Form>
         </div>
+        <Card className='mt-5'>
+          <CardHeader>
+            Product Images
+          </CardHeader>
+          <CardContent>
+            <div className='grid grid-cols-1 gap-2 md:grid-cols-6 md:items-start'>
+              {galleryLoading &&
+                <>
+                  <Skeleton className='md:col-span-2 md:text-right m-5 h-20' />
+                  <Skeleton className='md:col-span-2 md:text-right m-5 h-20' />
+                  <Skeleton className='md:col-span-2 md:text-right m-5 h-20' />
+                </>
+              }
+
+              {
+                galleryData?.map((item) => {
+                  return (
+                    <ImageThumbnail
+                      data={item}
+                      key={item.key}
+                      src={item.location}
+                      className='md:col-span-2 md:text-right border-2'
+                      deletable
+                      onDelete={(image) => {
+                        handleDeleteImage(image)
+
+                      }}
+                    />
+                  )
+                })
+              }
+            </div>
+          </CardContent>
+          <CardFooter>
+            <div className='flex justify-center pt-4 w-full'>
+              <label for="file-upload" class="custom-file-upload" className={cn(buttonVariants({ variant: "outline", size: "default" }))} >
+                Add More Images
+                {/* <Button variant={"outline"} >Add More Images..</Button> */}
+              </label>
+              <Input
+                type='file'
+                accept='image/*'
+                id='file-upload'
+                multiple
+                hidden
+                onChange={(e) => {
+                  if (!e.target.files) return;
+                  setSelectedImages(Array.from(e.target.files))
+                }}
+              //  className={cn(buttonVariants({ variant: "default", size: "default" }))} 
+              />
+            </div>
+          </CardFooter>
+        </Card>
+        <SelectedImagesDialog
+          open={selectedImages.length > 0}
+          images={selectedImages}
+          onClose={(state) => {
+            setSelectedImages([])
+          }}
+          onSubmit={() => {
+            if (!selectedProductRow?._id) return
+            addProductGalleryMutation.mutate({ id: selectedProductRow?._id, images: selectedImages })
+          }}
+        />
       </div>
     </>
   )

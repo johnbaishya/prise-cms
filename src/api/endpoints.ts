@@ -56,6 +56,7 @@ const ENDPOINTS = {
   core:{
     deleteGalleryimage:(galleryId:string)=>`/gallery/${galleryId}`,
     listCompanies:'/company',
+    createCompany:"/company",
   }
 }
 

@@ -1,8 +1,7 @@
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card"
 import { ImageThumbnail } from "@/components/ui/image-thumbnail"
 import { updateAppState } from "@/stores/actions/app-actions"
-import { ICompany } from "@/Types/entities/core-entities"
+import type { ICompany } from "@/Types/entities/core-entities"
 import { Building } from "lucide-react"
 
 type PropType = {

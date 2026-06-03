@@ -21,6 +21,9 @@ import { getUserCompanies } from '@/api/core/company.service'
 import { ImageThumbnail } from '../ui/image-thumbnail'
 import { updateAppState } from '@/stores/actions/app-actions'
 import { useAppStore } from '@/stores/app-store'
+import { getRouteApi } from '@tanstack/react-router'
+
+const route = getRouteApi("/_authenticated/company/");
 
 
 export function CompanySwitcher
@@ -28,7 +31,7 @@ export function CompanySwitcher
   const { isMobile } = useSidebar()
   const { selectedCompany } = useAppStore(state => state)
 
-
+  const navigate = route.useNavigate();
   const { data: CompaniesData, loading: CompaniesLoading } = useQuery({
     queryKey: [QueryKey.LIST_COMPANIES],
     queryFn: getUserCompanies
@@ -112,7 +115,13 @@ export function CompanySwitcher
               
             ))} */}
             <DropdownMenuSeparator />
-            <DropdownMenuItem className='gap-2 p-2'>
+            <DropdownMenuItem className='gap-2 p-2'
+              onClick={() => {
+                navigate({
+                  to: "/company/add"
+                })
+              }}
+            >
               <div className='flex size-6 items-center justify-center rounded-md border bg-background'>
                 <Plus className='size-4' />
               </div>
@@ -123,4 +132,4 @@ export function CompanySwitcher
       </SidebarMenuItem>
     </SidebarMenu>
   )
-}
+} 

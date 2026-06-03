@@ -28,6 +28,7 @@ import { Route as ClerkAuthenticatedRouteRouteImport } from './routes/clerk/_aut
 import { Route as ClerkauthRouteRouteImport } from './routes/clerk/(auth)/route'
 import { Route as AuthenticatedShowcaseRouteRouteImport } from './routes/_authenticated/showcase/route'
 import { Route as AuthenticatedSettingsRouteRouteImport } from './routes/_authenticated/settings/route'
+import { Route as AuthenticatedCompanyRouteRouteImport } from './routes/_authenticated/company/route'
 import { Route as AuthenticatedUsersIndexRouteImport } from './routes/_authenticated/users/index'
 import { Route as AuthenticatedTasksIndexRouteImport } from './routes/_authenticated/tasks/index'
 import { Route as AuthenticatedShowcaseIndexRouteImport } from './routes/_authenticated/showcase/index'
@@ -44,6 +45,7 @@ import { Route as AuthenticatedSettingsDisplayRouteImport } from './routes/_auth
 import { Route as AuthenticatedSettingsAppearanceRouteImport } from './routes/_authenticated/settings/appearance'
 import { Route as AuthenticatedSettingsAccountRouteImport } from './routes/_authenticated/settings/account'
 import { Route as AuthenticatedErrorsErrorRouteImport } from './routes/_authenticated/errors/$error'
+import { Route as AuthenticatedCompanyAddRouteImport } from './routes/_authenticated/company/add'
 import { Route as AuthenticatedShowcaseTagIndexRouteImport } from './routes/_authenticated/showcase/tag/index'
 import { Route as AuthenticatedShowcaseProductIndexRouteImport } from './routes/_authenticated/showcase/product/index'
 import { Route as AuthenticatedShowcaseCategoryIndexRouteImport } from './routes/_authenticated/showcase/category/index'
@@ -147,6 +149,12 @@ const AuthenticatedSettingsRouteRoute =
     path: '/settings',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedCompanyRouteRoute =
+  AuthenticatedCompanyRouteRouteImport.update({
+    id: '/company',
+    path: '/company',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedUsersIndexRoute = AuthenticatedUsersIndexRouteImport.update({
   id: '/users/',
   path: '/users/',
@@ -177,9 +185,9 @@ const AuthenticatedHelpCenterIndexRoute =
   } as any)
 const AuthenticatedCompanyIndexRoute =
   AuthenticatedCompanyIndexRouteImport.update({
-    id: '/company/',
-    path: '/company/',
-    getParentRoute: () => AuthenticatedRouteRoute,
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedCompanyRouteRoute,
   } as any)
 const AuthenticatedChatsIndexRoute = AuthenticatedChatsIndexRouteImport.update({
   id: '/chats/',
@@ -237,6 +245,11 @@ const AuthenticatedErrorsErrorRoute =
     path: '/errors/$error',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedCompanyAddRoute = AuthenticatedCompanyAddRouteImport.update({
+  id: '/add',
+  path: '/add',
+  getParentRoute: () => AuthenticatedCompanyRouteRoute,
+} as any)
 const AuthenticatedShowcaseTagIndexRoute =
   AuthenticatedShowcaseTagIndexRouteImport.update({
     id: '/tag/',
@@ -284,6 +297,7 @@ export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
   '/clerk': typeof ClerkAuthenticatedRouteRouteWithChildren
   '/test': typeof TestRoute
+  '/company': typeof AuthenticatedCompanyRouteRouteWithChildren
   '/settings': typeof AuthenticatedSettingsRouteRouteWithChildren
   '/showcase': typeof AuthenticatedShowcaseRouteRouteWithChildren
   '/forgot-password': typeof authForgotPasswordRoute
@@ -297,6 +311,7 @@ export interface FileRoutesByFullPath {
   '/500': typeof errors500Route
   '/503': typeof errors503Route
   '/authenticated-test': typeof AuthenticatedAuthenticatedTestRoute
+  '/company/add': typeof AuthenticatedCompanyAddRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
@@ -336,6 +351,7 @@ export interface FileRoutesByTo {
   '/503': typeof errors503Route
   '/authenticated-test': typeof AuthenticatedAuthenticatedTestRoute
   '/': typeof AuthenticatedIndexRoute
+  '/company/add': typeof AuthenticatedCompanyAddRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
@@ -365,6 +381,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/clerk': typeof ClerkRouteRouteWithChildren
   '/test': typeof TestRoute
+  '/_authenticated/company': typeof AuthenticatedCompanyRouteRouteWithChildren
   '/_authenticated/settings': typeof AuthenticatedSettingsRouteRouteWithChildren
   '/_authenticated/showcase': typeof AuthenticatedShowcaseRouteRouteWithChildren
   '/clerk/(auth)': typeof ClerkauthRouteRouteWithChildren
@@ -381,6 +398,7 @@ export interface FileRoutesById {
   '/(errors)/503': typeof errors503Route
   '/_authenticated/authenticated-test': typeof AuthenticatedAuthenticatedTestRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/_authenticated/company/add': typeof AuthenticatedCompanyAddRoute
   '/_authenticated/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/_authenticated/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/_authenticated/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
@@ -411,6 +429,7 @@ export interface FileRouteTypes {
     | '/'
     | '/clerk'
     | '/test'
+    | '/company'
     | '/settings'
     | '/showcase'
     | '/forgot-password'
@@ -424,6 +443,7 @@ export interface FileRouteTypes {
     | '/500'
     | '/503'
     | '/authenticated-test'
+    | '/company/add'
     | '/errors/$error'
     | '/settings/account'
     | '/settings/appearance'
@@ -463,6 +483,7 @@ export interface FileRouteTypes {
     | '/503'
     | '/authenticated-test'
     | '/'
+    | '/company/add'
     | '/errors/$error'
     | '/settings/account'
     | '/settings/appearance'
@@ -491,6 +512,7 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/clerk'
     | '/test'
+    | '/_authenticated/company'
     | '/_authenticated/settings'
     | '/_authenticated/showcase'
     | '/clerk/(auth)'
@@ -507,6 +529,7 @@ export interface FileRouteTypes {
     | '/(errors)/503'
     | '/_authenticated/authenticated-test'
     | '/_authenticated/'
+    | '/_authenticated/company/add'
     | '/_authenticated/errors/$error'
     | '/_authenticated/settings/account'
     | '/_authenticated/settings/appearance'
@@ -683,6 +706,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsRouteRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/company': {
+      id: '/_authenticated/company'
+      path: '/company'
+      fullPath: '/company'
+      preLoaderRoute: typeof AuthenticatedCompanyRouteRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/users/': {
       id: '/_authenticated/users/'
       path: '/users'
@@ -720,10 +750,10 @@ declare module '@tanstack/react-router' {
     }
     '/_authenticated/company/': {
       id: '/_authenticated/company/'
-      path: '/company'
+      path: '/'
       fullPath: '/company/'
       preLoaderRoute: typeof AuthenticatedCompanyIndexRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      parentRoute: typeof AuthenticatedCompanyRouteRoute
     }
     '/_authenticated/chats/': {
       id: '/_authenticated/chats/'
@@ -795,6 +825,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedErrorsErrorRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/company/add': {
+      id: '/_authenticated/company/add'
+      path: '/add'
+      fullPath: '/company/add'
+      preLoaderRoute: typeof AuthenticatedCompanyAddRouteImport
+      parentRoute: typeof AuthenticatedCompanyRouteRoute
+    }
     '/_authenticated/showcase/tag/': {
       id: '/_authenticated/showcase/tag/'
       path: '/tag'
@@ -846,6 +883,22 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface AuthenticatedCompanyRouteRouteChildren {
+  AuthenticatedCompanyAddRoute: typeof AuthenticatedCompanyAddRoute
+  AuthenticatedCompanyIndexRoute: typeof AuthenticatedCompanyIndexRoute
+}
+
+const AuthenticatedCompanyRouteRouteChildren: AuthenticatedCompanyRouteRouteChildren =
+  {
+    AuthenticatedCompanyAddRoute: AuthenticatedCompanyAddRoute,
+    AuthenticatedCompanyIndexRoute: AuthenticatedCompanyIndexRoute,
+  }
+
+const AuthenticatedCompanyRouteRouteWithChildren =
+  AuthenticatedCompanyRouteRoute._addFileChildren(
+    AuthenticatedCompanyRouteRouteChildren,
+  )
 
 interface AuthenticatedSettingsRouteRouteChildren {
   AuthenticatedSettingsAccountRoute: typeof AuthenticatedSettingsAccountRoute
@@ -904,6 +957,7 @@ const AuthenticatedShowcaseRouteRouteWithChildren =
   )
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedCompanyRouteRoute: typeof AuthenticatedCompanyRouteRouteWithChildren
   AuthenticatedSettingsRouteRoute: typeof AuthenticatedSettingsRouteRouteWithChildren
   AuthenticatedShowcaseRouteRoute: typeof AuthenticatedShowcaseRouteRouteWithChildren
   AuthenticatedAuthenticatedTestRoute: typeof AuthenticatedAuthenticatedTestRoute
@@ -911,13 +965,13 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedErrorsErrorRoute: typeof AuthenticatedErrorsErrorRoute
   AuthenticatedAppsIndexRoute: typeof AuthenticatedAppsIndexRoute
   AuthenticatedChatsIndexRoute: typeof AuthenticatedChatsIndexRoute
-  AuthenticatedCompanyIndexRoute: typeof AuthenticatedCompanyIndexRoute
   AuthenticatedHelpCenterIndexRoute: typeof AuthenticatedHelpCenterIndexRoute
   AuthenticatedTasksIndexRoute: typeof AuthenticatedTasksIndexRoute
   AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedCompanyRouteRoute: AuthenticatedCompanyRouteRouteWithChildren,
   AuthenticatedSettingsRouteRoute: AuthenticatedSettingsRouteRouteWithChildren,
   AuthenticatedShowcaseRouteRoute: AuthenticatedShowcaseRouteRouteWithChildren,
   AuthenticatedAuthenticatedTestRoute: AuthenticatedAuthenticatedTestRoute,
@@ -925,7 +979,6 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedErrorsErrorRoute: AuthenticatedErrorsErrorRoute,
   AuthenticatedAppsIndexRoute: AuthenticatedAppsIndexRoute,
   AuthenticatedChatsIndexRoute: AuthenticatedChatsIndexRoute,
-  AuthenticatedCompanyIndexRoute: AuthenticatedCompanyIndexRoute,
   AuthenticatedHelpCenterIndexRoute: AuthenticatedHelpCenterIndexRoute,
   AuthenticatedTasksIndexRoute: AuthenticatedTasksIndexRoute,
   AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
