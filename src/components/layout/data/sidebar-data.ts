@@ -21,6 +21,7 @@ import {
   AudioWaveform,
   Command,
   GalleryVerticalEnd,
+  Settings2,
 } from 'lucide-react'
 import { ClerkLogo } from '@/assets/clerk-logo'
 import { type SidebarData } from '../types'
@@ -49,6 +50,17 @@ export const sidebarData: SidebarData = {
     },
   ],
   navGroups: [
+    {
+      title:"",
+      items:[
+        {
+          title:"Company Settings",
+          url:"/company/settings",
+          icon:Settings
+        }
+
+      ]
+    },
     {
       title: 'General',
       items: [

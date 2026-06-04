@@ -9,11 +9,12 @@ type PropTypes = {
     images?: File[],
     onSubmit?: () => void,
     onClose?: (state: boolean) => void,
+    confirmText?: string,
 }
 
 
 export const SelectedImagesDialog = (props: PropTypes) => {
-    const { open, images, onSubmit, onClose } = props;
+    const { open, images, onSubmit, onClose, confirmText = "save" } = props;
     const [previewImages, setPreviewImages] = useState<string[]>([])
 
     const handleImagePreview = () => {
@@ -38,7 +39,6 @@ export const SelectedImagesDialog = (props: PropTypes) => {
                 if (onClose) {
                     onClose(state)
                 }
-                console.log("open change", state)
             }}
         >
             <DialogContent className="max-h-[85vh] overflow-y-auto">
@@ -56,7 +56,7 @@ export const SelectedImagesDialog = (props: PropTypes) => {
                 </div>
                 <DialogFooter>
                     <Button onClick={onSubmit} >
-                        Add Images
+                        {confirmText}
                     </Button>
                 </DialogFooter>
             </DialogContent>

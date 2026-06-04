@@ -1,7 +1,7 @@
 import type { AddCompanyFormDTO } from "./company.types";
 
 
-export const defaultAddCompanyFormValues = ():Partial<AddCompanyFormDTO>=>({
+export const emptyAddCompanyFormValues = ():Partial<AddCompanyFormDTO>=>({
   name: '',
   description: '',
   category:"",

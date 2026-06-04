@@ -45,6 +45,7 @@ import { Route as AuthenticatedSettingsDisplayRouteImport } from './routes/_auth
 import { Route as AuthenticatedSettingsAppearanceRouteImport } from './routes/_authenticated/settings/appearance'
 import { Route as AuthenticatedSettingsAccountRouteImport } from './routes/_authenticated/settings/account'
 import { Route as AuthenticatedErrorsErrorRouteImport } from './routes/_authenticated/errors/$error'
+import { Route as AuthenticatedCompanySettingsRouteImport } from './routes/_authenticated/company/settings'
 import { Route as AuthenticatedCompanyAddRouteImport } from './routes/_authenticated/company/add'
 import { Route as AuthenticatedShowcaseTagIndexRouteImport } from './routes/_authenticated/showcase/tag/index'
 import { Route as AuthenticatedShowcaseProductIndexRouteImport } from './routes/_authenticated/showcase/product/index'
@@ -245,6 +246,12 @@ const AuthenticatedErrorsErrorRoute =
     path: '/errors/$error',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedCompanySettingsRoute =
+  AuthenticatedCompanySettingsRouteImport.update({
+    id: '/settings',
+    path: '/settings',
+    getParentRoute: () => AuthenticatedCompanyRouteRoute,
+  } as any)
 const AuthenticatedCompanyAddRoute = AuthenticatedCompanyAddRouteImport.update({
   id: '/add',
   path: '/add',
@@ -312,6 +319,7 @@ export interface FileRoutesByFullPath {
   '/503': typeof errors503Route
   '/authenticated-test': typeof AuthenticatedAuthenticatedTestRoute
   '/company/add': typeof AuthenticatedCompanyAddRoute
+  '/company/settings': typeof AuthenticatedCompanySettingsRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
@@ -352,6 +360,7 @@ export interface FileRoutesByTo {
   '/authenticated-test': typeof AuthenticatedAuthenticatedTestRoute
   '/': typeof AuthenticatedIndexRoute
   '/company/add': typeof AuthenticatedCompanyAddRoute
+  '/company/settings': typeof AuthenticatedCompanySettingsRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
@@ -399,6 +408,7 @@ export interface FileRoutesById {
   '/_authenticated/authenticated-test': typeof AuthenticatedAuthenticatedTestRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/company/add': typeof AuthenticatedCompanyAddRoute
+  '/_authenticated/company/settings': typeof AuthenticatedCompanySettingsRoute
   '/_authenticated/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/_authenticated/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/_authenticated/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
@@ -444,6 +454,7 @@ export interface FileRouteTypes {
     | '/503'
     | '/authenticated-test'
     | '/company/add'
+    | '/company/settings'
     | '/errors/$error'
     | '/settings/account'
     | '/settings/appearance'
@@ -484,6 +495,7 @@ export interface FileRouteTypes {
     | '/authenticated-test'
     | '/'
     | '/company/add'
+    | '/company/settings'
     | '/errors/$error'
     | '/settings/account'
     | '/settings/appearance'
@@ -530,6 +542,7 @@ export interface FileRouteTypes {
     | '/_authenticated/authenticated-test'
     | '/_authenticated/'
     | '/_authenticated/company/add'
+    | '/_authenticated/company/settings'
     | '/_authenticated/errors/$error'
     | '/_authenticated/settings/account'
     | '/_authenticated/settings/appearance'
@@ -825,6 +838,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedErrorsErrorRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/company/settings': {
+      id: '/_authenticated/company/settings'
+      path: '/settings'
+      fullPath: '/company/settings'
+      preLoaderRoute: typeof AuthenticatedCompanySettingsRouteImport
+      parentRoute: typeof AuthenticatedCompanyRouteRoute
+    }
     '/_authenticated/company/add': {
       id: '/_authenticated/company/add'
       path: '/add'
@@ -886,12 +906,14 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedCompanyRouteRouteChildren {
   AuthenticatedCompanyAddRoute: typeof AuthenticatedCompanyAddRoute
+  AuthenticatedCompanySettingsRoute: typeof AuthenticatedCompanySettingsRoute
   AuthenticatedCompanyIndexRoute: typeof AuthenticatedCompanyIndexRoute
 }
 
 const AuthenticatedCompanyRouteRouteChildren: AuthenticatedCompanyRouteRouteChildren =
   {
     AuthenticatedCompanyAddRoute: AuthenticatedCompanyAddRoute,
+    AuthenticatedCompanySettingsRoute: AuthenticatedCompanySettingsRoute,
     AuthenticatedCompanyIndexRoute: AuthenticatedCompanyIndexRoute,
   }
 

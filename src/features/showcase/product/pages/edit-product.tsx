@@ -24,7 +24,7 @@ import { addProductGallery, createProduct, getProductGallery, updateProduct } fr
 import { toast } from 'sonner'
 import { type CreateProductDTO } from '@/Types/request/showcase-request'
 import { defaultAddProductForm } from '../product.constants'
-import { type AddProductForm, addProductformSchema, EditProductForm } from '../product.types'
+import { type AddProductForm, addProductformSchema, EditProductForm, editProductFormSchema } from '../product.types'
 import { getRouteApi } from '@tanstack/react-router'
 import { useShowcaseStore } from '@/stores/showcase-store'
 import { mapProductToForm } from '../product.utils'
@@ -52,7 +52,7 @@ export default function EditProduct() {
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
 
   const form = useForm<EditProductForm>({
-    resolver: zodResolver(addProductformSchema),
+    resolver: zodResolver(editProductFormSchema),
     defaultValues: selectedProductRow ? mapProductToForm(selectedProductRow) : defaultAddProductForm(),
   })
 

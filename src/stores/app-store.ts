@@ -1,4 +1,4 @@
-import { ICompany } from '@/Types/entities/core-entities'
+import type { ICompany } from '@/Types/entities/core-entities'
 import { create } from 'zustand'
 
 

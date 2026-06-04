@@ -3,8 +3,8 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { QueryKey } from '@/Types/appEnums'
-import { showAppLoader } from '@/stores/actions/app-actions'
-import { Button } from '@/components/ui/button'
+import { showAppLoader, updateAppState } from '@/stores/actions/app-actions'
+import { Button, buttonVariants } from '@/components/ui/button'
 import {
     Form,
     FormControl,
@@ -17,56 +17,91 @@ import { ImageThumbnail } from '@/components/ui/image-thumbnail'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { toast } from 'sonner'
-import { type AddCompanyFormDTO, baseCompanyformSchema } from '../company.types'
+import { type AddCompanyFormDTO, baseCompanyformSchema, type EditCompanyFormDTO } from '../company.types'
 import { getRouteApi } from '@tanstack/react-router'
-import { createCompany } from '@/api/core/company.service'
+import { createCompany, getCompanyDetail, updateCompany, updateCompanyBrandLogo } from '@/api/core/company.service'
 import { emptyAddCompanyFormValues } from '../company.constants'
+import { useAppStore } from '@/stores/app-store'
+import { Card, CardFooter, CardHeader } from '@/components/ui/card'
+import { cn } from '@/lib/utils'
+import { SelectedImagesDialog } from '@/components/selected-images-dialog'
+import { Building } from 'lucide-react'
 
 const route = getRouteApi('/_authenticated/company/add');
 
 
 
-export default function AddCompany() {
+export default function CompanySettings() {
+
+    const { selectedCompany } = useAppStore(state => state)
 
     const navigate = route.useNavigate()
-    const form = useForm<AddCompanyFormDTO>({
+    const form = useForm<EditCompanyFormDTO>({
         resolver: zodResolver(baseCompanyformSchema),
-        defaultValues: emptyAddCompanyFormValues()
+        defaultValues: selectedCompany || emptyAddCompanyFormValues(),
     })
 
     const [previewImage, setPreviewImage] = useState<string>("")
+    const [selectedImage, setSelectedImage] = useState<File | null>(null);
 
-    const handleImagePreview = () => {
-        const image = form.getValues('brand_logo')
-        if (image) {
-            const imgUri: string = URL.createObjectURL(image)
-            setPreviewImage(imgUri)
+    // const handleImagePreview = () => {
+    //     const image = form.getValues('brand_logo')
+    //     if (image) {
+    //         const imgUri: string = URL.createObjectURL(image)
+    //         setPreviewImage(imgUri)
+    //     }
+    // }
 
-
-        }
-    }
-
-    const imagesInputWatcher = form.watch('brand_logo')
 
 
     const onSubmit = (values: AddCompanyFormDTO) => {
-        companyAddMutation.mutate({ data: values })
+        if (selectedCompany?._id) {
+            companyupdateMutation.mutate({ companyId: selectedCompany?._id, data: values })
+        }
     }
 
 
     const queryClient = useQueryClient();
 
 
-    const companyAddMutation = useMutation({
-        mutationFn: createCompany,
+    const companyupdateMutation = useMutation({
+        mutationFn: updateCompany,
         onMutate: () => { showAppLoader(true) },
         onSettled: () => { showAppLoader(false) },
         onSuccess: () => {
-            form.reset(emptyAddCompanyFormValues());
             navigate({
                 to: "/company",
             })
-            toast.success("Company created Successfully !!!");
+            toast.success("Company updated Successfully !!!");
+            queryClient.invalidateQueries({
+                queryKey: [QueryKey.LIST_COMPANIES]
+            });
+        },
+
+    });
+
+    const refreshSelectedCompany = async () => {
+        if (selectedCompany?._id) {
+            const company = await getCompanyDetail({ companyId: selectedCompany?._id });
+            updateAppState({
+                selectedCompany: company
+            })
+        }
+    }
+
+
+
+    const companyBrandLogoUpdateMutation = useMutation({
+        mutationFn: updateCompanyBrandLogo,
+        onMutate: () => { showAppLoader(true) },
+        onSettled: () => { showAppLoader(false) },
+        onSuccess: (data) => {
+            setSelectedImage(null);
+            refreshSelectedCompany()
+            // navigate({
+            //     to: "/company",
+            // })
+            toast.success("brand logo updated Successfully !!!");
             queryClient.invalidateQueries({
                 queryKey: [QueryKey.LIST_COMPANIES]
             });
@@ -77,9 +112,13 @@ export default function AddCompany() {
 
 
 
+
+
+
+
     useEffect(() => {
-        handleImagePreview()
-    }, [imagesInputWatcher])
+        form.reset(selectedCompany || emptyAddCompanyFormValues())
+    }, [selectedCompany])
 
 
     return (
@@ -88,9 +127,9 @@ export default function AddCompany() {
 
                 {/* Header */}
                 <div className='mb-6'>
-                    <h1 className='text-2xl font-semibold'>Add New Company</h1>
+                    <h1 className='text-2xl font-semibold'>Company Settings</h1>
                     <p className='text-sm text-muted-foreground'>
-                        Create new Company here.
+                        configure company settings
                     </p>
                 </div>
 
@@ -289,7 +328,7 @@ export default function AddCompany() {
                                 )}
                             />
                             {/* Brand Logo */}
-                            <FormField
+                            {/* <FormField
                                 control={form.control}
                                 name='brand_logo'
                                 render={({ field }) => (
@@ -317,7 +356,7 @@ export default function AddCompany() {
                                         </div>
                                     </FormItem>
                                 )}
-                            />
+                            /> */}
 
                             {!!previewImage && (
                                 <div className='grid grid-cols-1 gap-2 md:grid-cols-6 md:items-start'>
@@ -330,12 +369,60 @@ export default function AddCompany() {
 
                             {/* Actions */}
                             <div className='flex justify-end pt-4'>
-                                <Button type='submit'>Create Company</Button>
+                                <Button type='submit'>Save Changes</Button>
                             </div>
                         </form>
                     </Form>
                 </div>
+                <Card className='mt-5'>
+                    <CardHeader>
+                        <h2 className='text-lg font-semibold'>Brand Logo</h2>
+                        {
+                            selectedCompany?.brand_logo ?
+                                <ImageThumbnail className='w-xs' src={selectedCompany?.brand_logo} /> :
+                                <Building size={100} />
+                        }
+                        <CardFooter>
+                            <div className='flex justify-center pt-4 w-full'>
+                                <label for="file-upload" class="custom-file-upload" className={cn(buttonVariants({ variant: "outline", size: "default" }))} >
+                                    Select New Logo
+                                    {/* <Button variant={"outline"} >Add More Images..</Button> */}
+                                </label>
+                                <Input
+                                    type='file'
+                                    accept='image/*'
+                                    id='file-upload'
+                                    multiple
+                                    hidden
+                                    onChange={(e) => {
+                                        if (!!e.target.files[0]) {
+                                            setSelectedImage(e.target.files[0])
+                                        };
+                                    }}
+                                //  className={cn(buttonVariants({ variant: "default", size: "default" }))} 
+                                />
+                            </div>
+                        </CardFooter>
+                    </CardHeader>
+                </Card>
             </div>
+            {!!selectedImage &&
+                <SelectedImagesDialog
+                    open={!!selectedImage}
+                    images={[selectedImage]}
+                    onClose={(state) => {
+                        setSelectedImage(null)
+                    }}
+                    confirmText="Select Image"
+                    onSubmit={() => {
+                        if (selectedCompany?._id) {
+                            companyBrandLogoUpdateMutation.mutate({ companyId: selectedCompany?._id, image: selectedImage })
+                        }
+                        // if (!selectedProductRow?._id) return
+                        // addProductGalleryMutation.mutate({ id: selectedProductRow?._id, images: selectedImages })
+                    }}
+                />
+            }
         </>
     )
 }

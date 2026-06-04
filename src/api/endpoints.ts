@@ -57,6 +57,9 @@ const ENDPOINTS = {
     deleteGalleryimage:(galleryId:string)=>`/gallery/${galleryId}`,
     listCompanies:'/company',
     createCompany:"/company",
+    updateCompany:(companyId:string)=>`company/${companyId}`,
+    updateCompanyBrandLogo:(companyId:string)=>`company/${companyId}/brand-logo`,
+    getCompanyDetaail:(companyId:string)=>`company/${companyId}`,
   }
 }
 

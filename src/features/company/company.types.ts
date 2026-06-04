@@ -13,11 +13,14 @@ export const baseCompanyformSchema = z.object({
   lon:z.string().optional(),
   currency:z.string().min(1, 'currency is required'),
   brand_color:z.string().optional(),
-  brand_logo:z.instanceof(File),  
- 
+  // brand_logo:z.instanceof(File),  
+})
+
+export const addCompanyFormSchema = baseCompanyformSchema.extend({
+  brand_logo:z.instanceof(File), 
 })
 
 
 
-export type AddCompanyFormDTO = z.infer<typeof baseCompanyformSchema>
+export type AddCompanyFormDTO = z.infer<typeof addCompanyFormSchema>
 export type EditCompanyFormDTO = z.infer<typeof baseCompanyformSchema>

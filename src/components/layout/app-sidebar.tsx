@@ -13,6 +13,7 @@ import { NavUser } from './nav-user'
 import { TeamSwitcher } from './team-switcher'
 import { CompanySwitcher } from './company-switcher'
 import { PriseBrand } from './prise-brand'
+import { Settings } from 'lucide-react'
 
 
 export function AppSidebar() {
@@ -23,7 +24,6 @@ export function AppSidebar() {
         {/* <TeamSwitcher teams={sidebarData.teams} /> */}
         <PriseBrand />
         <CompanySwitcher />
-
         {/* Replace <TeamSwitch /> with the following <AppTitle />
          /* if you want to use the normal app title instead of TeamSwitch dropdown */}
         {/* <AppTitle /> */}
