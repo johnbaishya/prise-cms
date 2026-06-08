@@ -19,9 +19,9 @@ import { useQuery } from '@tanstack/react-query'
 import { QueryKey } from '@/Types/appEnums'
 import { getUserCompanies } from '@/api/core/company.service'
 import { ImageThumbnail } from '../ui/image-thumbnail'
-import { updateAppState } from '@/stores/actions/app-actions'
 import { useAppStore } from '@/stores/app-store'
 import { getRouteApi } from '@tanstack/react-router'
+import { selectCompany } from '@/features/company/company.service'
 
 const route = getRouteApi("/_authenticated/company/");
 
@@ -91,9 +91,7 @@ export function CompanySwitcher
                     <DropdownMenuItem
                       key={company._id}
                       onClick={() => {
-                        updateAppState({
-                          selectedCompany: company,
-                        })
+                        selectCompany(company);
                       }}
                       className='gap-2 p-2'
                     >

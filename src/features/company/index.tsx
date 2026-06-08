@@ -1,14 +1,8 @@
 import { getRouteApi } from '@tanstack/react-router'
-import { ConfigDrawer } from '@/components/config-drawer'
-import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
-import { ProfileDropdown } from '@/components/profile-dropdown'
-import { Search } from '@/components/search'
-import { ThemeSwitch } from '@/components/theme-switch'
 // import { UsersProvider } from './components/users-provider'
 import { useQuery } from '@tanstack/react-query'
 import { QueryKey } from '@/Types/appEnums'
-import { getProductCategoryList } from '@/api/showcase/product-category.service'
 import { CompanyCard } from './components/company-card'
 import { Button } from '@/components/ui/button'
 import { getUserCompanies } from '@/api/core/company.service'
@@ -20,7 +14,7 @@ export function Company() {
     // const search = route.useSearch()
     const navigate = route.useNavigate();
 
-    const { data: CompaniesData, loading: CompaniesLoading } = useQuery({
+    const { data: CompaniesData } = useQuery({
         queryKey: [QueryKey.LIST_COMPANIES],
         queryFn: getUserCompanies
     })

@@ -21,7 +21,7 @@ export const createCompany = (param:{data:AddCompanyFormDTO}):Promise<ICompany>=
 
 export const updateCompany = (param:{companyId:string,data:EditCompanyFormDTO}):Promise<ICompany>=>{
     const data = param.data;
-    return apiClient.put(ENDPOINTS.core.updateCompany(param.companyId),data);
+    return apiClient.put(ENDPOINTS.core.updateCompany(param.companyId),data).then(res=>res.data);
 }
 
 

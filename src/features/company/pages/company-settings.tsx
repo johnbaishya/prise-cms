@@ -25,7 +25,8 @@ import { useAppStore } from '@/stores/app-store'
 import { Card, CardFooter, CardHeader } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 import { SelectedImagesDialog } from '@/components/selected-images-dialog'
-import { Building } from 'lucide-react'
+import { Building, Pencil } from 'lucide-react'
+import { selectCompany } from '../company.service'
 
 const route = getRouteApi('/_authenticated/company/add');
 
@@ -34,6 +35,7 @@ const route = getRouteApi('/_authenticated/company/add');
 export default function CompanySettings() {
 
     const { selectedCompany } = useAppStore(state => state)
+    const [editable, setEditable] = useState<boolean>(false);
 
     const navigate = route.useNavigate()
     const form = useForm<EditCompanyFormDTO>({
@@ -68,10 +70,9 @@ export default function CompanySettings() {
         mutationFn: updateCompany,
         onMutate: () => { showAppLoader(true) },
         onSettled: () => { showAppLoader(false) },
-        onSuccess: () => {
-            navigate({
-                to: "/company",
-            })
+        onSuccess: (data) => {
+            selectCompany(data);
+            setEditable(false);
             toast.success("Company updated Successfully !!!");
             queryClient.invalidateQueries({
                 queryKey: [QueryKey.LIST_COMPANIES]
@@ -141,6 +142,21 @@ export default function CompanySettings() {
                             onSubmit={form.handleSubmit(onSubmit)}
                             className='space-y-6'
                         >
+                            <div className='flex justify-end pt-4 gap-1.5'>
+
+                                <Button
+                                    variant={'outline'}
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        setEditable(true);
+                                    }}
+                                    className='right-0'
+                                    disabled={editable}
+                                >
+                                    <Pencil />
+                                    Edit
+                                </Button>
+                            </div>
                             {/* Name */}
                             <FormField
                                 control={form.control}
@@ -155,6 +171,7 @@ export default function CompanySettings() {
                                                 <Input
                                                     placeholder='Comapany Name *'
                                                     autoComplete='off'
+                                                    disabled={!editable}
                                                     {...field}
                                                 />
                                             </FormControl>
@@ -178,6 +195,7 @@ export default function CompanySettings() {
                                                 <Input
                                                     placeholder='eg. IT, Manufacturing, Hospitality etc *'
                                                     autoComplete='off'
+                                                    disabled={!editable}
                                                     {...field}
                                                 />
                                             </FormControl>
@@ -202,6 +220,7 @@ export default function CompanySettings() {
                                                     type='email'
                                                     placeholder='Company Email'
                                                     autoComplete='off'
+                                                    disabled={!editable}
                                                     {...field}
                                                 />
                                             </FormControl>
@@ -225,6 +244,7 @@ export default function CompanySettings() {
                                                     type='tel'
                                                     placeholder='Company Phone Number'
                                                     autoComplete='off'
+                                                    disabled={!editable}
                                                     {...field}
                                                 />
                                             </FormControl>
@@ -249,6 +269,7 @@ export default function CompanySettings() {
                                                 <Textarea
                                                     placeholder='Type the description of the Company'
                                                     rows={3}
+                                                    disabled={!editable}
                                                     {...field}
                                                 />
                                             </FormControl>
@@ -272,6 +293,7 @@ export default function CompanySettings() {
                                                 <Input
                                                     placeholder='asddress of the company'
                                                     autoComplete='off'
+                                                    disabled={!editable}
                                                     {...field}
                                                 />
                                             </FormControl>
@@ -295,6 +317,7 @@ export default function CompanySettings() {
                                                 <Input
                                                     placeholder='currency used by company for transactions (eg. USD, EUR, GBP etc)'
                                                     autoComplete='off'
+                                                    disabled={!editable}
                                                     {...field}
                                                 />
                                             </FormControl>
@@ -319,6 +342,7 @@ export default function CompanySettings() {
                                                     type='color'
                                                     placeholder='type comapany Category eg. IT, Manufacturing, Hospitality etc *'
                                                     autoComplete='off'
+                                                    disabled={!editable}
                                                     {...field}
                                                 />
                                             </FormControl>
@@ -368,8 +392,22 @@ export default function CompanySettings() {
                             )}
 
                             {/* Actions */}
-                            <div className='flex justify-end pt-4'>
-                                <Button type='submit'>Save Changes</Button>
+                            <div className='flex justify-end pt-4 gap-1.5'>
+                                {
+                                    editable &&
+                                    <>
+                                        <Button
+                                            variant={'outline'}
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                setEditable(false);
+                                            }}
+                                        >
+                                            Cancel
+                                        </Button>
+                                        <Button type='submit'>Save Changes</Button>
+                                    </>
+                                }
                             </div>
                         </form>
                     </Form>

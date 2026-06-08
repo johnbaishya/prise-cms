@@ -1,6 +1,6 @@
 import { useAuthStore } from "@/stores/auth-store";
 import { LocalStorageKey } from "@/Types/appEnums";
-import { Iuser } from "@/Types/entities.types";
+import {type Iuser } from "@/Types/entities.types";
 
 
 

@@ -1,8 +1,8 @@
 import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card"
 import { ImageThumbnail } from "@/components/ui/image-thumbnail"
-import { updateAppState } from "@/stores/actions/app-actions"
 import type { ICompany } from "@/Types/entities/core-entities"
 import { Building } from "lucide-react"
+import { selectCompany } from "../company.service"
 
 type PropType = {
     data: ICompany
@@ -12,9 +12,7 @@ export const CompanyCard = (props: PropType) => {
     const { data } = props;
     return (
         <Card onClick={() => {
-            updateAppState({
-                selectedCompany: data
-            })
+            selectCompany(data);
         }} className="hover:shadow-accent-foreground">
             <CardContent>
                 {

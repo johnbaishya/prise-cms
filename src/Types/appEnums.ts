@@ -1,6 +1,7 @@
 export enum LocalStorageKey {
   TOKEN = 'token',
   USER = 'user',
+  COMPANY = "company",
 }
 
 export enum QueryKey {

@@ -7,17 +7,20 @@ import {
   SidebarRail,
 } from '@/components/ui/sidebar'
 // import { AppTitle } from './app-title'
-import { sidebarData } from './data/sidebar-data'
 import { NavGroup } from './nav-group'
 import { NavUser } from './nav-user'
 import { TeamSwitcher } from './team-switcher'
 import { CompanySwitcher } from './company-switcher'
 import { PriseBrand } from './prise-brand'
 import { Settings } from 'lucide-react'
+import { useAppStore } from '@/stores/app-store'
+import { getsidebarData } from './data/sidebar-nav'
 
 
 export function AppSidebar() {
   const { collapsible, variant } = useLayout()
+  const { selectedCompany } = useAppStore(state => state);
+  const sidebarData = getsidebarData(selectedCompany);
   return (
     <Sidebar collapsible={collapsible} variant={variant}>
       <SidebarHeader>
