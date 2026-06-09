@@ -1,10 +1,11 @@
 import { useAuthStore } from "@/stores/auth-store";
 import { LocalStorageKey } from "@/Types/appEnums";
-import {type Iuser } from "@/Types/entities.types";
+import { type IUser } from "@/Types/entities/core-entities";
 
 
 
-export const authenticateApp = (user:Iuser,token:string)=>{
+
+export const authenticateApp = (user:IUser,token:string)=>{
     // store the token in local storage
     const stringUser = JSON.stringify(user);
     localStorage.setItem(LocalStorageKey.USER,stringUser);
@@ -15,7 +16,7 @@ export const authenticateApp = (user:Iuser,token:string)=>{
 
 
 
-export const hydrateAuthState = (user:Iuser,token:string)=>{
+export const hydrateAuthState = (user:IUser,token:string)=>{
     useAuthStore.getState().auth.setUser(user);
     useAuthStore.getState().auth.setAccessToken(token)
 }
@@ -36,7 +37,7 @@ export const checkAuthStatus = ():boolean=>{
         return false;
     }
 
-    const parsedUser = JSON.parse(user) as Iuser;
+    const parsedUser = JSON.parse(user) as IUser;
     hydrateAuthState(parsedUser,token);
     return true;
 }
@@ -49,6 +50,7 @@ export const logoutApp = ()=>{
     // remove the token from local storage
     localStorage.removeItem(LocalStorageKey.TOKEN);
     localStorage.removeItem(LocalStorageKey.USER);
+    localStorage.removeItem(LocalStorageKey.COMPANY);
 
     useAuthStore.getState().auth.reset();
 }

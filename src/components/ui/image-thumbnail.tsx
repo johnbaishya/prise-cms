@@ -7,7 +7,7 @@ import { CSSProperties } from 'react'
 type ImageThumbnailProps = {
   src?: string
   className?: string
-  style?: StylePropertyMap
+  style?: CSSProperties
   imageStyle?: CSSProperties
   size?: number
   deletable?: boolean
@@ -38,7 +38,7 @@ export const ImageThumbnail = (props: ImageThumbnailProps) => {
       <img
         className='w-full'
         src={src ? src : data?.location ? data.location : 'https://picsum.photos/200'}
-        style={{ aspectRatio: '1/1', ...props.imageStyle }}
+        style={{ aspectRatio: '1/1', height: size, width: size, ...props.imageStyle }}
       />
     </div>
   )

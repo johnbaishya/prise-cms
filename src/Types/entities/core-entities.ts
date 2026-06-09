@@ -44,6 +44,27 @@ const companySchema = z.object({
 export type ICompany = z.infer<typeof companySchema>
 
 
+const userSchema = z.object({
+    _id:z.string(),
+    first_name:z.string().min(3),
+    last_name:z.string().min(2),
+    email:z.email(),
+    profile_pic:z.string(),
+    phone:z.string().optional(),
+
+})
+
+export type IUser = z.infer<typeof userSchema>
+// export interface IUser {
+//     id:string
+//     firstName:string
+//     lastName:string
+//     email:string
+//     profilePic:string
+// }
+
+
+
 // export interface IGallery extends Document {
 //     _id:string
 //   entityType: EntityType;

@@ -33,6 +33,7 @@ import { Route as AuthenticatedUsersIndexRouteImport } from './routes/_authentic
 import { Route as AuthenticatedTasksIndexRouteImport } from './routes/_authenticated/tasks/index'
 import { Route as AuthenticatedShowcaseIndexRouteImport } from './routes/_authenticated/showcase/index'
 import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
+import { Route as AuthenticatedProfileIndexRouteImport } from './routes/_authenticated/profile/index'
 import { Route as AuthenticatedHelpCenterIndexRouteImport } from './routes/_authenticated/help-center/index'
 import { Route as AuthenticatedCompanyIndexRouteImport } from './routes/_authenticated/company/index'
 import { Route as AuthenticatedChatsIndexRouteImport } from './routes/_authenticated/chats/index'
@@ -177,6 +178,12 @@ const AuthenticatedSettingsIndexRoute =
     id: '/',
     path: '/',
     getParentRoute: () => AuthenticatedSettingsRouteRoute,
+  } as any)
+const AuthenticatedProfileIndexRoute =
+  AuthenticatedProfileIndexRouteImport.update({
+    id: '/profile/',
+    path: '/profile/',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedHelpCenterIndexRoute =
   AuthenticatedHelpCenterIndexRouteImport.update({
@@ -332,6 +339,7 @@ export interface FileRoutesByFullPath {
   '/chats/': typeof AuthenticatedChatsIndexRoute
   '/company/': typeof AuthenticatedCompanyIndexRoute
   '/help-center/': typeof AuthenticatedHelpCenterIndexRoute
+  '/profile/': typeof AuthenticatedProfileIndexRoute
   '/settings/': typeof AuthenticatedSettingsIndexRoute
   '/showcase/': typeof AuthenticatedShowcaseIndexRoute
   '/tasks/': typeof AuthenticatedTasksIndexRoute
@@ -373,6 +381,7 @@ export interface FileRoutesByTo {
   '/chats': typeof AuthenticatedChatsIndexRoute
   '/company': typeof AuthenticatedCompanyIndexRoute
   '/help-center': typeof AuthenticatedHelpCenterIndexRoute
+  '/profile': typeof AuthenticatedProfileIndexRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
   '/showcase': typeof AuthenticatedShowcaseIndexRoute
   '/tasks': typeof AuthenticatedTasksIndexRoute
@@ -421,6 +430,7 @@ export interface FileRoutesById {
   '/_authenticated/chats/': typeof AuthenticatedChatsIndexRoute
   '/_authenticated/company/': typeof AuthenticatedCompanyIndexRoute
   '/_authenticated/help-center/': typeof AuthenticatedHelpCenterIndexRoute
+  '/_authenticated/profile/': typeof AuthenticatedProfileIndexRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
   '/_authenticated/showcase/': typeof AuthenticatedShowcaseIndexRoute
   '/_authenticated/tasks/': typeof AuthenticatedTasksIndexRoute
@@ -467,6 +477,7 @@ export interface FileRouteTypes {
     | '/chats/'
     | '/company/'
     | '/help-center/'
+    | '/profile/'
     | '/settings/'
     | '/showcase/'
     | '/tasks/'
@@ -508,6 +519,7 @@ export interface FileRouteTypes {
     | '/chats'
     | '/company'
     | '/help-center'
+    | '/profile'
     | '/settings'
     | '/showcase'
     | '/tasks'
@@ -555,6 +567,7 @@ export interface FileRouteTypes {
     | '/_authenticated/chats/'
     | '/_authenticated/company/'
     | '/_authenticated/help-center/'
+    | '/_authenticated/profile/'
     | '/_authenticated/settings/'
     | '/_authenticated/showcase/'
     | '/_authenticated/tasks/'
@@ -753,6 +766,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/settings/'
       preLoaderRoute: typeof AuthenticatedSettingsIndexRouteImport
       parentRoute: typeof AuthenticatedSettingsRouteRoute
+    }
+    '/_authenticated/profile/': {
+      id: '/_authenticated/profile/'
+      path: '/profile'
+      fullPath: '/profile/'
+      preLoaderRoute: typeof AuthenticatedProfileIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/help-center/': {
       id: '/_authenticated/help-center/'
@@ -988,6 +1008,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAppsIndexRoute: typeof AuthenticatedAppsIndexRoute
   AuthenticatedChatsIndexRoute: typeof AuthenticatedChatsIndexRoute
   AuthenticatedHelpCenterIndexRoute: typeof AuthenticatedHelpCenterIndexRoute
+  AuthenticatedProfileIndexRoute: typeof AuthenticatedProfileIndexRoute
   AuthenticatedTasksIndexRoute: typeof AuthenticatedTasksIndexRoute
   AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
 }
@@ -1002,6 +1023,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAppsIndexRoute: AuthenticatedAppsIndexRoute,
   AuthenticatedChatsIndexRoute: AuthenticatedChatsIndexRoute,
   AuthenticatedHelpCenterIndexRoute: AuthenticatedHelpCenterIndexRoute,
+  AuthenticatedProfileIndexRoute: AuthenticatedProfileIndexRoute,
   AuthenticatedTasksIndexRoute: AuthenticatedTasksIndexRoute,
   AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
 }

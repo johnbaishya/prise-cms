@@ -21,7 +21,7 @@ import { Input } from '@/components/ui/input'
 import { PasswordInput } from '@/components/password-input'
 import { userLogin } from '@/api/auth'
 import { authenticateApp } from '@/services/auth.service'
-import { Iuser } from '@/Types/entities.types'
+import { IUser } from '@/Types/entities/core-entities'
 
 const formSchema = z.object({
   email: z.email({
@@ -56,29 +56,22 @@ export function UserAuthForm({
 
   function onSubmit(data: z.infer<typeof formSchema>) {
     setIsLoading(true)
-    userLogin({email:data.email,password:data.password})
-    .then(res=>{
-      toast.success("login successful");
-      // Redirect to the stored location or default to dashboard
-      const targetPath = redirectTo || '/'
-      const {user,token} = res;
-      const parsedUser:Iuser = {
-        id:user.id,
-        email:user.email,
-        firstName:user.first_name,
-        lastName:user.last_name,
-        profilePic:user.profile_pic
-      }
-      authenticateApp(parsedUser,token)
-      navigate({ to: targetPath, replace: true })
-    }).catch(err=>{
-      toast.error("login failed "+err.toString())
-      console.log(err);
-    })
-    .finally(()=>{
-      setIsLoading(false)
-    })
-    
+    userLogin({ email: data.email, password: data.password })
+      .then(res => {
+        toast.success("login successful");
+        // Redirect to the stored location or default to dashboard
+        const targetPath = redirectTo || '/'
+        const { user, token } = res;
+        const parsedUser: IUser = user;
+        authenticateApp(parsedUser, token)
+        navigate({ to: targetPath, replace: true })
+      }).catch(err => {
+        toast.error("login failed " + err.toString())
+      })
+      .finally(() => {
+        setIsLoading(false)
+      })
+
 
     // toast.promise(sleep(2000), {
     //   loading: 'Signing in...',

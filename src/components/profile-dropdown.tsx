@@ -17,7 +17,7 @@ import { useAuthStore } from '@/stores/auth-store'
 
 export function ProfileDropdown() {
   const [open, setOpen] = useDialogState()
-  const user = useAuthStore((state)=>state.auth.user);
+  const user = useAuthStore((state) => state.auth.user);
 
   return (
     <>
@@ -33,7 +33,7 @@ export function ProfileDropdown() {
         <DropdownMenuContent className='w-56' align='end' forceMount>
           <DropdownMenuLabel className='font-normal'>
             <div className='flex flex-col gap-1.5'>
-              <p className='text-sm leading-none font-medium'>{user?.firstName}</p>
+              <p className='text-sm leading-none font-medium'>{user?.first_name}</p>
               <p className='text-xs leading-none text-muted-foreground'>
                 {user?.email}
               </p>
@@ -42,7 +42,7 @@ export function ProfileDropdown() {
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
             <DropdownMenuItem asChild>
-              <Link to='/settings'>
+              <Link to='/profile'>
                 Profile
                 <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
               </Link>

@@ -1,18 +1,24 @@
 import { create } from 'zustand'
 import { getCookie, setCookie, removeCookie } from '@/lib/cookies'
-import { Iuser } from '@/Types/entities.types'
+import { type IUser } from '@/Types/entities/core-entities'
 
 const ACCESS_TOKEN = 'thisisjustarandomstring'
 
-interface AuthState {
-  auth: {
-    user: Iuser | null
-    setUser: (user: Iuser | null) => void
-    accessToken: string
-    setAccessToken: (accessToken: string) => void
-    resetAccessToken: () => void
-    reset: () => void
-  }
+export interface AuthStateData {
+  user: IUser | null
+  accessToken: string
+}
+
+export interface AuthActions {
+  setUser: (user: IUser | null) => void
+  setAccessToken: (accessToken: string) => void
+  resetAccessToken: () => void
+  reset: () => void
+  updateState: (data: Partial<AuthStateData>) => void
+}
+
+export interface AuthState {
+  auth: AuthStateData & AuthActions
 }
 
 export const useAuthStore = create<AuthState>()((set) => {
@@ -42,6 +48,12 @@ export const useAuthStore = create<AuthState>()((set) => {
             auth: { ...state.auth, user: null, accessToken: '' },
           }
         }),
+        updateState:(data)=>set((state)=>({
+          auth:{
+            ...state.auth,
+            ...data
+          }
+        })),
     },
   }
 })

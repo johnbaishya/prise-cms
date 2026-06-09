@@ -1,8 +1,13 @@
 import  { type AppStateData, useAppStore } from "../app-store";
+import { type AuthStateData, useAuthStore } from "../auth-store";
 import { type ConfirmOptions, useConfirmStore } from "../confirm-store";
 
 export const updateAppState = (data:Partial<AppStateData>)=>{
     useAppStore.getState().updateState(data);
+}
+
+export const updateAuthState = (data:Partial<AuthStateData>)=>{
+    useAuthStore.getState().auth.updateState(data);
 }
 
 
