@@ -1,119 +1,240 @@
-# Shadcn Admin Dashboard
+# Prise CMS
 
-Admin Dashboard UI crafted with Shadcn and Vite. Built with responsiveness and accessibility in mind.
+> A centralized Content Management System (CMS) for managing all Prise platform modules, companies, and business operations.
 
-![alt text](public/images/shadcn-admin.png)
+## Overview
 
-[![Sponsored by Clerk](https://img.shields.io/badge/Sponsored%20by-Clerk-5b6ee1?logo=clerk)](https://go.clerk.com/GttUAaK)
+Prise CMS is the administration portal of the **Prise Platform**, providing a single interface to manage companies, users, modules, permissions, and operational data across the ecosystem.
 
-I've been creating dashboard UIs at work and for my personal projects. I always wanted to make a reusable collection of dashboard UI for future projects; and here it is now. While I've created a few custom components, some of the code is directly adapted from ShadcnUI examples.
+The CMS acts as the control center for different Prise modules, allowing administrators to configure, monitor, and manage each business application from one place.
 
-> This is not a starter project (template) though. I'll probably make one in the future.
+---
 
-## Features
+## Modules
 
-- Light/dark mode
-- Responsive
-- Accessible
-- With built-in Sidebar component
-- Global search command
-- 10+ pages
-- Extra custom components
-- RTL support
+The CMS currently supports the management of multiple Prise modules including:
 
-<details>
-<summary>Customized Components (click to expand)</summary>
+### 🏢 Company Management
+- Create and manage companies
+- Company profile management
+- Theme and branding configuration
+- Company-specific settings
 
-This project uses Shadcn UI components, but some have been slightly modified for better RTL (Right-to-Left) support and other improvements. These customized components differ from the original Shadcn UI versions.
+### 🛍 Showcase
+An e-commerce management module.
 
-If you want to update components using the Shadcn CLI (e.g., `npx shadcn@latest add <component>`), it's generally safe for non-customized components. For the listed customized ones, you may need to manually merge changes to preserve the project's modifications and avoid overwriting RTL support or other updates.
+Features include:
 
-> If you don't require RTL support, you can safely update the 'RTL Updated Components' via the Shadcn CLI, as these changes are primarily for RTL compatibility. The 'Modified Components' may have other customizations to consider.
+- Product Management
+- Categories
+- Tags
+- Brands
+- Banners
+- Product Images
+- Inventory Management
+- Product Variants
+- Product Status
+- SEO Information
 
-### Modified Components
+### ⏰ ClockMe
+A workforce and attendance management module.
 
-- scroll-area
-- sonner
-- separator
+Features include:
 
-### RTL Updated Components
+- Employee Management
+- Attendance Tracking
+- Shift Management
+- Time Logs
+- Workforce Monitoring
 
-- alert-dialog
-- calendar
-- command
-- dialog
-- dropdown-menu
-- select
-- table
-- sheet
-- sidebar
-- switch
+### 📦 Future Modules
 
-**Notes:**
+The architecture is designed to be modular, allowing additional business modules to be integrated without affecting the existing system.
 
-- **Modified Components**: These have general updates, potentially including RTL adjustments.
-- **RTL Updated Components**: These have specific changes for RTL language support (e.g., layout, positioning).
-- For implementation details, check the source files in `src/components/ui/`.
-- All other Shadcn UI components in the project are standard and can be safely updated via the CLI.
 
-</details>
+
+## Key Features
+
+- Multi-company support
+- Modular architecture
+- Role-based access control
+- Dashboard analytics
+- Dynamic module management
+- Secure authentication
+- Responsive admin interface
+- Scalable architecture
+- REST API integration
+
+---
 
 ## Tech Stack
 
-**UI:** [ShadcnUI](https://ui.shadcn.com) (TailwindCSS + RadixUI)
+### Frontend
 
-**Build Tool:** [Vite](https://vitejs.dev/)
+- React
+- TypeScript
+- Vite
+- React Router
+- React Query
+- React Hook Form
+- Tailwind CSS
+- Shadcn UI
 
-**Routing:** [TanStack Router](https://tanstack.com/router/latest)
+### Backend
 
-**Type Checking:** [TypeScript](https://www.typescriptlang.org/)
+- Node.js
+- Express.js
+- MongoDB
+- Mongoose
+- JWT Authentication
 
-**Linting/Formatting:** [ESLint](https://eslint.org/) & [Prettier](https://prettier.io/)
+---
 
-**Icons:** [Lucide Icons](https://lucide.dev/icons/), [Tabler Icons](https://tabler.io/icons) (Brand icons only)
+## Architecture
 
-**Auth (partial):** [Clerk](https://go.clerk.com/GttUAaK)
-
-## Run Locally
-
-Clone the project
-
-```bash
-  git clone https://github.com/satnaing/shadcn-admin.git
+```
+Prise CMS
+│
+├── Company Management
+│
+├── Showcase
+│   ├── Products
+│   ├── Categories
+│   ├── Tags
+│   ├── Brands
+│   └── Banners
+│
+├── ClockMe
+│   ├── Employees
+│   ├── Attendance
+│   ├── Shifts
+│   └── Time Logs
+│
+└── Future Modules
 ```
 
-Go to the project directory
+---
+
+## User Roles
+
+The CMS supports multiple administrative levels.
+
+### Level 1 Administrator
+- Full system access
+- Manage all companies
+- Configure modules
+- Create administrators
+
+### Level 2 Administrator
+- Platform administration
+- Company management
+- Operational management
+
+### Level 3 Company Owner
+- Manage their own company
+- Configure company modules
+- Manage employees and users
+
+### Level 4 Staff/Admin
+- Limited access based on assigned permissions
+
+---
+
+## Project Goals
+
+The primary goal of Prise CMS is to provide:
+
+- A centralized administration platform
+- Easy management of multiple businesses
+- Modular business applications
+- Scalable enterprise architecture
+- Consistent user experience across all modules
+
+---
+
+## Installation
+
+Clone the repository:
 
 ```bash
-  cd shadcn-admin
+git clone https://github.com/johnbaishya/prise-cms.git
 ```
 
-Install dependencies
+Install dependencies:
 
 ```bash
-  pnpm install
+npm install
 ```
 
-Start the server
+Start the development server:
 
 ```bash
-  pnpm run dev
+npm run dev
 ```
 
-## Sponsoring this project ❤️
+Build for production:
 
-If you find this project helpful or use this in your own work, consider [sponsoring me](https://github.com/sponsors/satnaing) to support development and maintenance. You can [buy me a coffee](https://buymeacoffee.com/satnaing) as well. Don’t worry, every penny helps. Thank you! 🙏
+```bash
+npm run build
+```
 
-For questions or sponsorship inquiries, feel free to reach out at [satnaingdev@gmail.com](mailto:satnaingdev@gmail.com).
+---
 
-### Current Sponsor
+## Folder Structure
 
-- [Clerk](https://go.clerk.com/GttUAaK) - authentication and user management for the modern web
+```
+src/
+├── components/
+├── features/
+├── pages/
+├── layouts/
+├── routes/
+├── services/
+├── hooks/
+├── utils/
+├── types/
+└── assets/
+```
 
-## Author
+---
 
-Crafted with 🤍 by [@satnaing](https://github.com/satnaing)
+## Screenshots
+
+> Screenshots will be added soon.
+
+---
+
+## Roadmap
+
+- Dashboard improvements
+- Advanced analytics
+- Notification system
+- Audit logs
+- File management
+- Activity history
+- Multi-language support
+- Theme customization
+- Plugin system
+- Additional business modules
+
+---
 
 ## License
 
-Licensed under the [MIT License](https://choosealicense.com/licenses/mit/)
+This project is currently private and maintained by the Snaptap development team.
+
+---
+
+## Author
+
+**John Baishya**
+
+Full Stack Developer
+
+- React
+- React Native
+- Node.js
+- TypeScript
+- MongoDB
+
+GitHub: https://github.com/johnbaishya
